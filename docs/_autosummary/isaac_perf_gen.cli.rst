@@ -1,0 +1,12 @@
+isaac\_perf\_gen.cli
+====================
+
+.. automodule:: isaac_perf_gen.cli
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      main
+   
