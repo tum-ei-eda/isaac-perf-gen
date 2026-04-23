@@ -1,25 +1,19 @@
 [build-system]
-requires = ["setuptools>=61", "setuptools_scm[toml]>=7.0"]
-build-backend = "packaging_backend"
-backend-path = ["."]
+requires = [
+    "setuptools>=64",
+    "setuptools-scm>=8",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+# backend-path = ["."]
 
 [project]
 name = "isaac-perf-gen"
 description = "Generating CorePerfDSL Performance Models for ISE candidates"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.10"
-dynamic = ["version"]
+dynamic = ["version", "dependencies", "optional-dependencies"]
 license = { file = "LICENSE" }
-dependencies = [
-    "mako",
-    "numpy",
-    "pandas"
-]
-
-[project.optional-dependencies]
-tests = [
-    "pytest",
-]
 
 [project.urls]
 Homepage = "https://github.com/tum-ei-eda/isaac-perf-gen"
@@ -27,7 +21,7 @@ Repository = "https://github.com/tum-ei-eda/isaac-perf-gen"
 Issues = "https://github.com/tum-ei-eda/isaac-perf-gen/issues"
 
 [project.scripts]
-emx-onnx-cgen = "isaac-perf-gen.cli:main"
+isaac-perf-gen = "isaac_perf_gen.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -38,3 +32,27 @@ emx_onnx_cgen = ["templates/*.mako"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.setuptools.dynamic.optional-dependencies]
+dev = { file = ["requirements_dev.txt"] }
+
+[tool.setuptools_scm]
+
+[tool.bumpver]
+current_version = "0.1.0"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message = "bump version {old_version} -> {new_version}"
+tag_message = "{new_version}"
+tag_scope = "default"
+pre_commit_hook = ""
+post_commit_hook = ""
+commit = true
+tag = true
+push = true
+
+[tool.bumpver.file_patterns]
+"isaac_toolkit/version.py" = ["{version}"]
+"docs/conf.py" = ["{version}"]
