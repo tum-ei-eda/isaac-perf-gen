@@ -19,3 +19,5 @@
 """ISAAC Perf Gen CLI."""
 
 from .gen_xisaac_core_perf_dsl_new import main
+
+__all__ = ["main"]

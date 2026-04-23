@@ -21,5 +21,6 @@
 import pytest
 
 
-def test_artifact_filter_artifacts():
+@pytest.mark.parametrize("foo", [1, 2])
+def test_artifact_filter_artifacts(foo):
     assert True
