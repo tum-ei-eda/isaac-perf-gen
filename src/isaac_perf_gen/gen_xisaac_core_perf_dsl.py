@@ -1,3 +1,23 @@
+#
+# Copyright (c) 2026 TUM Department of Electrical and Computer Engineering.
+#
+# This file is part of ISAAC Perf Gen.
+# See https://github.com/tum-ei-eda/isaac-perf-gen.git for further info.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+"""ISAAC Perf Gen Script (old)."""
+
 import ast
 import itertools
 import tempfile
@@ -11,7 +31,8 @@ import pandas as pd
 from mako.template import Template
 from mako.lookup import TemplateLookup
 
-pd.set_option('display.max_columns', None)
+pd.set_option("display.max_columns", None)
+
 
 def get_permutations(d):
     # return [
@@ -23,16 +44,37 @@ def get_permutations(d):
         for list_prod_value in itertools.product(*(d[k] for k in sorted(d.keys())))
     ]
 
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-t", "--template", default=None, required=True, help="Base MAKO Template")
-    parser.add_argument("-o", "--output", default=None, help="Output .core_perf_dsl file path")
-    parser.add_argument("--monitor-template", default=None, help="Mako template for monitor description")
-    parser.add_argument("--monitor-dest", default=None, help="Directory containing generated Monitor descriptions")
-    parser.add_argument("--ini-dest", default=None, help="Directory containing generated INI files (and mako templates)")
-    parser.add_argument("--uarchs-dest", default=None, help="Output CSV file for uarch names")
-    parser.add_argument("-c", "--core", required=True, choices=["cv32e40p", "cva6"], help="Base core")
-    parser.add_argument("--temp-dir", default=None, help="Optional path to persistent temp dir")
+    parser.add_argument(
+        "-t", "--template", default=None, required=True, help="Base MAKO Template"
+    )
+    parser.add_argument(
+        "-o", "--output", default=None, help="Output .core_perf_dsl file path"
+    )
+    parser.add_argument(
+        "--monitor-template", default=None, help="Mako template for monitor description"
+    )
+    parser.add_argument(
+        "--monitor-dest",
+        default=None,
+        help="Directory containing generated Monitor descriptions",
+    )
+    parser.add_argument(
+        "--ini-dest",
+        default=None,
+        help="Directory containing generated INI files (and mako templates)",
+    )
+    parser.add_argument(
+        "--uarchs-dest", default=None, help="Output CSV file for uarch names"
+    )
+    parser.add_argument(
+        "-c", "--core", required=True, choices=["cv32e40p", "cva6"], help="Base core"
+    )
+    parser.add_argument(
+        "--temp-dir", default=None, help="Optional path to persistent temp dir"
+    )
     parser.add_argument("--hls-dir", default=None, help="Path to hls output dir")
     # parser.add_argument("--hls-schedules", default=None, help="Path to hls_schedules.csv")
     # parser.add_argument("--hls-yaml", default=None, help="Path to ISAX_XIsaac.yaml")
@@ -40,11 +82,11 @@ def main():
     parser.add_argument("--variants", default=None, help="Filter variants")
     parser.add_argument("--index-yaml", default=None, help="Path to XISAAC index.yml")
     parser.add_argument("--parts-only", action="store_true", help="Only generate parts")
-    parser.add_argument("--render-only", action="store_true", help="Only render final output")
+    parser.add_argument(
+        "--render-only", action="store_true", help="Only render final output"
+    )
     args = parser.parse_args()
     core_name = "XIsaacCore"
-
-
 
     @contextmanager
     def temp_dir_content(enter_result=None):
@@ -100,16 +142,24 @@ def main():
             variants = {}
             variant_extras = {}
             if hls_schedules_df is not None:
-                hls_schedules_df["SG"] = hls_schedules_df["config"].apply(lambda x: int(x.split("_")[1]))
-            hls_selected_schedule_metrics_csv = Path(args.hls_dir) / "hls_selected_schedule_metrics.csv" 
-            assert hls_selected_schedule_metrics_csv.is_file(), f"Missing: {hls_selected_schedule_metrics_csv}"
+                hls_schedules_df["SG"] = hls_schedules_df["config"].apply(
+                    lambda x: int(x.split("_")[1])
+                )
+            hls_selected_schedule_metrics_csv = (
+                Path(args.hls_dir) / "hls_selected_schedule_metrics.csv"
+            )
+            assert (
+                hls_selected_schedule_metrics_csv.is_file()
+            ), f"Missing: {hls_selected_schedule_metrics_csv}"
             hls_variants_df = pd.read_csv(hls_selected_schedule_metrics_csv)
             num_variants = len(hls_variants_df)
             print("hls_variants_df")
             print(hls_variants_df)
             print("num_variants", num_variants)
             if variants_filter:
-                hls_variants_df = hls_variants_df[hls_variants_df["Variant idx"].isin(variants_filter)]
+                hls_variants_df = hls_variants_df[
+                    hls_variants_df["Variant idx"].isin(variants_filter)
+                ]
             print("hls_variants_df")
             print(hls_variants_df)
             for _, variant_row in hls_variants_df.iterrows():
@@ -119,15 +169,28 @@ def main():
                 variant_details = variant_row["Variant details"]
                 variant_description = variant_row["Variant description"]
                 total_area_estimate = variant_row["total_area_estimate"]
-                variant_extras[variant_name] = (variant_description, variant_details, total_area_estimate)
+                variant_extras[variant_name] = (
+                    variant_description,
+                    variant_details,
+                    total_area_estimate,
+                )
                 if variant_name is not None:
-                    selected_solutions_yaml = Path(args.hls_dir) / "output" / variant_name / "selected_solutions.yaml"
+                    selected_solutions_yaml = (
+                        Path(args.hls_dir)
+                        / "output"
+                        / variant_name
+                        / "selected_solutions.yaml"
+                    )
                 else:
-                    selected_solutions_yaml = Path(args.hls_dir) / "output" / "selected_solutions.yaml"
-                assert selected_solutions_yaml.is_file(), f"Missing: {selected_solutions_yaml}"
+                    selected_solutions_yaml = (
+                        Path(args.hls_dir) / "output" / "selected_solutions.yaml"
+                    )
+                assert (
+                    selected_solutions_yaml.is_file()
+                ), f"Missing: {selected_solutions_yaml}"
                 with open(selected_solutions_yaml) as f:
                     selected_solutions = yaml.safe_load(f)
-                variant = (selected_solutions)
+                variant = selected_solutions
                 variants[variant_name] = variant
             print("variants", variants)
             # input(">>>")
@@ -141,18 +204,30 @@ def main():
                 # else:
                 #     hls_yaml = Path(args.hls_yaml)
                 if variant_name is not None:
-                    hls_yaml = Path(args.hls_dir) / "output" / variant_name / "ISAX_XIsaac.yaml"
+                    hls_yaml = (
+                        Path(args.hls_dir)
+                        / "output"
+                        / variant_name
+                        / "ISAX_XIsaac.yaml"
+                    )
                 else:
                     hls_yaml = Path(args.hls_dir) / "output" / "ISAX_XIsaac.yaml"
                 assert hls_yaml.is_file(), f"Missing: {hls_yaml}"
                 with open(hls_yaml) as f:
                     hls_data = yaml.safe_load(f)
                     # print("hls_data", hls_data)
+
                 def apply_selection(hls_schedules_df, selected_solutions):
-                    configs = [f"SG_{x['sharing_group']}_SOL_IDX_{x['solution_idx']}" for x in selected_solutions]
+                    configs = [
+                        f"SG_{x['sharing_group']}_SOL_IDX_{x['solution_idx']}"
+                        for x in selected_solutions
+                    ]
                     # print("configs", configs)
-                    hls_schedules_df_ = hls_schedules_df[hls_schedules_df["config"].isin(configs)]
+                    hls_schedules_df_ = hls_schedules_df[
+                        hls_schedules_df["config"].isin(configs)
+                    ]
                     return hls_schedules_df_
+
                 hls_schedules_df = apply_selection(hls_schedules_df, selected_solutions)
                 # print("hls_schedules_df_", hls_schedules_df)
                 instr_latencies = {}
@@ -169,7 +244,9 @@ def main():
                     else:
                         lats = ast.literal_eval(lats)
                         # print("lats", lats, type(lats))
-                        assert len(lats) == 1, "Multi-instr sharing groups are unsupported!"
+                        assert (
+                            len(lats) == 1
+                        ), "Multi-instr sharing groups are unsupported!"
                     for instr_name, lat in lats.items():
                         sg2instrs[grp].append(instr_name)
                         lat_ = lat
@@ -213,9 +290,17 @@ def main():
                         operand_dir = operand_dirs[i]
                         assert operand_dir != "INOUT", "INOUT regs not supported!"
                         if operand_type == "REG":
-                            assert operand_name in ["rd", "rs1", "rs2"], f"Unsupported operand name: {operand_name}"
+                            assert operand_name in [
+                                "rd",
+                                "rs1",
+                                "rs2",
+                            ], f"Unsupported operand name: {operand_name}"
                         operand_field = operand_name
-                        operands_map[operand_name] = (operand_field, operand_type, operand_dir)
+                        operands_map[operand_name] = (
+                            operand_field,
+                            operand_type,
+                            operand_dir,
+                        )
                     instr_operands_map[instr_name] = operands_map
                     print("instr_name", instr_name)
                     print("instr_latencies2", instr_latencies2)
@@ -250,12 +335,24 @@ def main():
                 }
                 core_parts_map = cores_parts_map.get(args.core)
                 core_parts_map2 = cores_parts_map2.get(args.core)
-                assert core_parts_map is not None, f"Parts not found for core '{args.core}'"
-                assert core_parts_map2 is not None, f"Parts not found for core '{args.core}'"
+                assert (
+                    core_parts_map is not None
+                ), f"Parts not found for core '{args.core}'"
+                assert (
+                    core_parts_map2 is not None
+                ), f"Parts not found for core '{args.core}'"
                 for part_file, part_tmpl in core_parts_map.items():
                     mylookup = TemplateLookup(directories=template_dirs)
-                    part_template = Template(filename=f"templates/{part_tmpl}", lookup=mylookup)
-                    part_content = part_template.render(instr_names=instr_names, instr_operands_map=instr_operands_map, instrs_timing=instrs_timing, sg2instrs=sg2instrs, variant_name=variant_name)
+                    part_template = Template(
+                        filename=f"templates/{part_tmpl}", lookup=mylookup
+                    )
+                    part_content = part_template.render(
+                        instr_names=instr_names,
+                        instr_operands_map=instr_operands_map,
+                        instrs_timing=instrs_timing,
+                        sg2instrs=sg2instrs,
+                        variant_name=variant_name,
+                    )
                     subdir = dest_dir / variant_name
                     subdir.mkdir(exist_ok=True)
                     part_dest = subdir / part_file
@@ -263,8 +360,15 @@ def main():
                         f.write(part_content)
                 for part_file, part_tmpl in core_parts_map2.items():
                     mylookup = TemplateLookup(directories=template_dirs)
-                    part_template = Template(filename=f"templates/{part_tmpl}", lookup=mylookup)
-                    part_content = part_template.render(instr_names=instr_names, instr_operands_map=instr_operands_map, instrs_timing=instrs_timing, sg2instrs=sg2instrs)
+                    part_template = Template(
+                        filename=f"templates/{part_tmpl}", lookup=mylookup
+                    )
+                    part_content = part_template.render(
+                        instr_names=instr_names,
+                        instr_operands_map=instr_operands_map,
+                        instrs_timing=instrs_timing,
+                        sg2instrs=sg2instrs,
+                    )
                     subdir = dest_dir
                     part_dest = subdir / part_file
                     with open(part_dest, "w") as f:
@@ -299,7 +403,12 @@ def main():
         mylookup = TemplateLookup(directories=template_dirs)
         mytemplate = Template(filename=str(monitor_template), lookup=mylookup)
         monitor_name = monitor_dest.stem
-        monitor_content = mytemplate.render(xlen=xlen, instr_operands_map=instr_operands_map, monitor_name=monitor_name, core_name=core_name)
+        monitor_content = mytemplate.render(
+            xlen=xlen,
+            instr_operands_map=instr_operands_map,
+            monitor_name=monitor_name,
+            core_name=core_name,
+        )
         # print("sg2instrs", sg2instrs)
         # print("instr_operands_map", instr_operands_map)
         with open(monitor_dest, "w") as f:
@@ -313,14 +422,20 @@ def main():
             variant_description, variant_details, total_area_estimate = extras
             uarch = f"CV32E40PXISAAC{variant_suffix}"
             uarch_lower = uarch.lower()
-            new = {"uarch": uarch, "uarch_lower": uarch_lower, "variant": variant_name, "description": variant_description, "details": variant_details, "total_area_estimate": total_area_estimate}
+            new = {
+                "uarch": uarch,
+                "uarch_lower": uarch_lower,
+                "variant": variant_name,
+                "description": variant_description,
+                "details": variant_details,
+                "total_area_estimate": total_area_estimate,
+            }
             uarchs_data.append(new)
 
         uarchs_df = pd.DataFrame(uarchs_data)
         print("uarch_df")
         print(uarchs_df)
         uarchs_df.to_csv(args.uarchs_dest)
-
 
     if args.ini_dest:
         assert variants is not None
