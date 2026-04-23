@@ -10,3 +10,5 @@
 [![bench workflow](https://github.com/tum-ei-eda/isaac-perf-gen/actions/workflows/release.yml/badge.svg)](https://github.com/tum-ei-eda/isaac-perf-gen/actions/workflows/release.yml)
 
 Generating CorePerfDSL Performance Models for ISE candidates
+
+https://tum-ei-eda.github.io/isaac-perf-gen
