@@ -51,7 +51,9 @@ def get_permutations(d):
 
 
 def get_templates_base(core: Optional[str] = None):
-    templates_path = files("isaac_perf_gen.templates")  # .joinpath("message.eml").read_text()
+    templates_path = files(
+        "isaac_perf_gen.templates"
+    )  # .joinpath("message.eml").read_text()
     # print("templates_path", templates_path)
     if core is not None:
         templates_path = templates_path.joinpath(core)
@@ -85,8 +87,12 @@ def lookup_template(inp: str, core: Optional[str] = None, suffix: Optional[str] 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--template", default=None, help="Base MAKO Template")
-    parser.add_argument("-o", "--output", default=None, help="Output .core_perf_dsl file path")
-    parser.add_argument("--monitor-template", default=None, help="Mako template for monitor description")
+    parser.add_argument(
+        "-o", "--output", default=None, help="Output .core_perf_dsl file path"
+    )
+    parser.add_argument(
+        "--monitor-template", default=None, help="Mako template for monitor description"
+    )
     parser.add_argument(
         "--monitor-dest",
         default=None,
@@ -97,9 +103,15 @@ def main():
         default=None,
         help="Directory containing generated INI files (and mako templates)",
     )
-    parser.add_argument("--uarchs-dest", default=None, help="Output CSV file for uarch names")
-    parser.add_argument("-c", "--core", required=True, choices=["cv32e40p", "cva6"], help="Base core")
-    parser.add_argument("--temp-dir", default=None, help="Optional path to persistent temp dir")
+    parser.add_argument(
+        "--uarchs-dest", default=None, help="Output CSV file for uarch names"
+    )
+    parser.add_argument(
+        "-c", "--core", required=True, choices=["cv32e40p", "cva6"], help="Base core"
+    )
+    parser.add_argument(
+        "--temp-dir", default=None, help="Optional path to persistent temp dir"
+    )
     parser.add_argument("--hls-dir", default=None, help="Path to hls output dir")
     # parser.add_argument("--hls-schedules", default=None, help="Path to hls_schedules.csv")
     # parser.add_argument("--hls-yaml", default=None, help="Path to ISAX_XIsaac.yaml")
@@ -107,7 +119,9 @@ def main():
     parser.add_argument("--variants", default=None, help="Filter variants")
     parser.add_argument("--index-yaml", default=None, help="Path to XISAAC index.yml")
     parser.add_argument("--parts-only", action="store_true", help="Only generate parts")
-    parser.add_argument("--render-only", action="store_true", help="Only render final output")
+    parser.add_argument(
+        "--render-only", action="store_true", help="Only render final output"
+    )
     args = parser.parse_args()
     core = args.core
     core_name = "XIsaacCore"
@@ -167,16 +181,24 @@ def main():
             variants = {}
             variant_extras = {}
             if hls_schedules_df is not None:
-                hls_schedules_df["SG"] = hls_schedules_df["config"].apply(lambda x: int(x.split("_")[1]))
-            hls_selected_schedule_metrics_csv = Path(args.hls_dir) / "hls_selected_schedule_metrics.csv"
-            assert hls_selected_schedule_metrics_csv.is_file(), f"Missing: {hls_selected_schedule_metrics_csv}"
+                hls_schedules_df["SG"] = hls_schedules_df["config"].apply(
+                    lambda x: int(x.split("_")[1])
+                )
+            hls_selected_schedule_metrics_csv = (
+                Path(args.hls_dir) / "hls_selected_schedule_metrics.csv"
+            )
+            assert (
+                hls_selected_schedule_metrics_csv.is_file()
+            ), f"Missing: {hls_selected_schedule_metrics_csv}"
             hls_variants_df = pd.read_csv(hls_selected_schedule_metrics_csv)
             num_variants = len(hls_variants_df)
             # print("hls_variants_df")
             print(hls_variants_df)
             # print("num_variants", num_variants)
             if variants_filter:
-                hls_variants_df = hls_variants_df[hls_variants_df["Variant idx"].isin(variants_filter)]
+                hls_variants_df = hls_variants_df[
+                    hls_variants_df["Variant idx"].isin(variants_filter)
+                ]
             print("hls_variants_df")
             print(hls_variants_df)
             for idx, variant_row in hls_variants_df.iterrows():
@@ -196,10 +218,19 @@ def main():
                     total_area_estimate,
                 )
                 if variant_name is not None:
-                    selected_solutions_yaml = Path(args.hls_dir) / "output" / variant_name / "selected_solutions.yaml"
+                    selected_solutions_yaml = (
+                        Path(args.hls_dir)
+                        / "output"
+                        / variant_name
+                        / "selected_solutions.yaml"
+                    )
                 else:
-                    selected_solutions_yaml = Path(args.hls_dir) / "output" / "selected_solutions.yaml"
-                assert selected_solutions_yaml.is_file(), f"Missing: {selected_solutions_yaml}"
+                    selected_solutions_yaml = (
+                        Path(args.hls_dir) / "output" / "selected_solutions.yaml"
+                    )
+                assert (
+                    selected_solutions_yaml.is_file()
+                ), f"Missing: {selected_solutions_yaml}"
                 with open(selected_solutions_yaml) as f:
                     selected_solutions = yaml.safe_load(f)
                 variant = selected_solutions
@@ -215,7 +246,12 @@ def main():
                 # else:
                 #     hls_yaml = Path(args.hls_yaml)
                 if variant_name is not None:
-                    hls_yaml = Path(args.hls_dir) / "output" / variant_name / "ISAX_XIsaac.yaml"
+                    hls_yaml = (
+                        Path(args.hls_dir)
+                        / "output"
+                        / variant_name
+                        / "ISAX_XIsaac.yaml"
+                    )
                 else:
                     hls_yaml = Path(args.hls_dir) / "output" / "ISAX_XIsaac.yaml"
                 assert hls_yaml.is_file(), f"Missing: {hls_yaml}"
@@ -224,12 +260,19 @@ def main():
                     # print("hls_data", hls_data)
 
                 def apply_selection(hls_schedules_df, selected_solutions):
-                    configs = [f"SG_{x['sharing_group']}_SOL_IDX_{x['solution_idx']}" for x in selected_solutions]
+                    configs = [
+                        f"SG_{x['sharing_group']}_SOL_IDX_{x['solution_idx']}"
+                        for x in selected_solutions
+                    ]
                     # print("configs", configs)
-                    hls_schedules_df_ = hls_schedules_df[hls_schedules_df["config"].isin(configs)]
+                    hls_schedules_df_ = hls_schedules_df[
+                        hls_schedules_df["config"].isin(configs)
+                    ]
                     return hls_schedules_df_
 
-                hls_schedules_df_ = apply_selection(hls_schedules_df, selected_solutions)
+                hls_schedules_df_ = apply_selection(
+                    hls_schedules_df, selected_solutions
+                )
                 # print("hls_schedules_df_", hls_schedules_df_)
                 instr_latencies = {}
                 sg2ii = {}
@@ -252,7 +295,9 @@ def main():
                     else:
                         lats = ast.literal_eval(lats)
                         # print("lats", lats, type(lats))
-                        assert len(lats) == 1, "Multi-instr sharing groups are unsupported!"
+                        assert (
+                            len(lats) == 1
+                        ), "Multi-instr sharing groups are unsupported!"
                     for instr_name, lat in lats.items():
                         sg2instrs[grp].append(instr_name)
                         lat_ = lat
@@ -313,7 +358,9 @@ def main():
                     # print("instr_name", instr_name)
                     # print("instr_latencies2", instr_latencies2)
                     instr_cycles = instr_latencies2[instr_name]
-                    sgs = [sg for sg, instrs in sg2instrs.items() if instr_name in instrs]
+                    sgs = [
+                        sg for sg, instrs in sg2instrs.items() if instr_name in instrs
+                    ]
                     # print("sgs", sgs)
                     assert len(sgs) == 1
                     sg = sgs[0]
@@ -351,12 +398,18 @@ def main():
                 }
                 core_parts_map = cores_parts_map.get(args.core)
                 core_parts_map2 = cores_parts_map2.get(args.core)
-                assert core_parts_map is not None, f"Parts not found for core '{args.core}'"
-                assert core_parts_map2 is not None, f"Parts not found for core '{args.core}'"
+                assert (
+                    core_parts_map is not None
+                ), f"Parts not found for core '{args.core}'"
+                assert (
+                    core_parts_map2 is not None
+                ), f"Parts not found for core '{args.core}'"
                 for part_file, part_tmpl in core_parts_map.items():
                     # print("template_dirs", template_dirs)
                     mylookup = TemplateLookup(directories=template_dirs)
-                    part_template = Template(filename=f"{templates_path}/parts/{part_tmpl}", lookup=mylookup)
+                    part_template = Template(
+                        filename=f"{templates_path}/parts/{part_tmpl}", lookup=mylookup
+                    )
                     part_content = part_template.render(
                         instr_names=instr_names,
                         instr_operands_map=instr_operands_map,
@@ -374,7 +427,9 @@ def main():
                         f.write(part_content)
                 for part_file, part_tmpl in core_parts_map2.items():
                     mylookup = TemplateLookup(directories=template_dirs)
-                    part_template = Template(filename=f"{templates_path}/parts/{part_tmpl}", lookup=mylookup)
+                    part_template = Template(
+                        filename=f"{templates_path}/parts/{part_tmpl}", lookup=mylookup
+                    )
                     part_content = part_template.render(
                         instr_names=instr_names,
                         instr_operands_map=instr_operands_map,
@@ -404,8 +459,12 @@ def main():
                     assert core is not None
                     core2template = {"cv32e40p": "CV32E40PXISAAC"}
                     template = core2template.get(core)
-                    assert template is not None, f"Could not find template for core {core}"
-                template = lookup_template(template, core=args.core, suffix=".corePerfDsl")
+                    assert (
+                        template is not None
+                    ), f"Could not find template for core {core}"
+                template = lookup_template(
+                    template, core=args.core, suffix=".corePerfDsl"
+                )
                 # print("template", template)
                 assert template is not None
                 mytemplate = Template(filename=template, lookup=mylookup)
@@ -424,9 +483,15 @@ def main():
         if monitor_template is None:
             assert core is not None
             core2monitor_template = {}
-            monitor_template = core2monitor_template.get(core, "InstructionTrace_XISAAC")
-            assert monitor_template is not None, f"Could not find monitor_template for core {core}"
-        monitor_template = lookup_template(monitor_template, core=args.core, suffix=".json")
+            monitor_template = core2monitor_template.get(
+                core, "InstructionTrace_XISAAC"
+            )
+            assert (
+                monitor_template is not None
+            ), f"Could not find monitor_template for core {core}"
+        monitor_template = lookup_template(
+            monitor_template, core=args.core, suffix=".json"
+        )
         # print("monitor_template", monitor_template)
         monitor_template = Path(monitor_template)
         assert monitor_template.is_file()
