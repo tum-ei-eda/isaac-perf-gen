@@ -508,11 +508,9 @@ plugin.tracePrinter.stream.fileName=instr_trace
                 with open(ini_file, "w") as f:
                     f.write(ini_content)
 
-    print("args.output", args.output)
     if args.output is None:
         print(content)
     else:
-        print("write")
         with open(args.output, "w") as f:
             f.write(content)
 
