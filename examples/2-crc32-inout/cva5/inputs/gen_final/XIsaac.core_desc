@@ -1,0 +1,38 @@
+import "RVI.core_desc"
+
+InstructionSet XIsaac extends RV32I {
+    instructions {
+        CUSTOM21 {
+            encoding: 7'b0000000 :: rs3[4:0] :: rs1[4:0] :: 3'b000 :: rd[4:0] :: 7'b1111011;
+            assembly: {"custom21", "{name(rd)}, {name(rs1)}, {name(rs3)}"};
+            behavior: {
+                unsigned<32> rs1_val = X[rs1];
+                unsigned<32> rs3_val = X[rs3];
+                unsigned<32> rd_val = X[rd];
+                unsigned<32> outp0 = (unsigned<32>)((((unsigned<32>)((unsigned<32>)((((unsigned<32>)((unsigned<32>)((((signed<32>)((unsigned<32>)((((signed<32>)(rs3_val) * (signed<32>)(rd_val))))) + (signed<32>)(rs1_val))))) << (unsigned<32>)((1)))))) >> (unsigned<32>)((1)))));
+                X[rd] = outp0;
+            }
+        }
+        CUSTOM83 {
+            encoding: 7'b0000001 :: rs2[4:0] :: rs1[4:0] :: 3'b000 :: rd[4:0] :: 7'b1111011;
+            assembly: {"custom83", "{name(rd)}, {name(rs1)}, {name(rs2)}"};
+            behavior: {
+                unsigned<32> rs1_val = X[rs1];
+                unsigned<32> rs2_val = X[rs2];
+                unsigned<32> outp0 = (unsigned<32>)((((unsigned<32>)(rs1_val) ^ (unsigned<32>)((unsigned<32>)((((unsigned<32>)(rs2_val) >> (unsigned<32>)((8)))))))));
+                X[rd] = outp0;
+            }
+        }
+        CUSTOM16 {
+            encoding: 2'b00 :: uimm5[4:0] :: rs3[4:0] :: rs1[4:0] :: 3'b001 :: rd[4:0] :: 7'b1111011;
+            assembly: {"custom16", "{name(rd)}, {name(rs1)}, {name(rs3)}, {uimm5}"};
+            behavior: {
+                unsigned<32> rs3_val = X[rs3];
+                unsigned<32> rs1_val = X[rs1];
+                unsigned<32> rd_val = X[rd];
+                unsigned<32> outp0 = (unsigned<32>)((((signed<32>)(rs1_val) + (signed<32>)((unsigned<32>)((((unsigned<32>)((unsigned<32>)((((unsigned<32>)((unsigned<32>)((((unsigned<32>)(rd_val) ^ (unsigned<32>)(rs3_val))))) & (unsigned<32>)((255)))))) << (unsigned<32>)((unsigned<5>)((uimm5))))))))));
+                X[rd] = outp0;
+            }
+        }
+    }
+}

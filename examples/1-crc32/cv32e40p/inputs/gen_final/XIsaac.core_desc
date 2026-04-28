@@ -1,0 +1,16 @@
+import "RVI.core_desc"
+
+InstructionSet XIsaac extends RV32I {
+    instructions {
+        CUSTOM83 {
+            encoding: 7'b0000001 :: rs2[4:0] :: rs1[4:0] :: 3'b000 :: rd[4:0] :: 7'b1111011;
+            assembly: {"custom83", "{name(rd)}, {name(rs1)}, {name(rs2)}"};
+            behavior: {
+                unsigned<32> rs1_val = X[rs1];
+                unsigned<32> rs2_val = X[rs2];
+                unsigned<32> outp0 = (unsigned<32>)((((unsigned<32>)(rs1_val) ^ (unsigned<32>)((unsigned<32>)((((unsigned<32>)(rs2_val) >> (unsigned<32>)((8)))))))));
+                X[rd] = outp0;
+            }
+        }
+    }
+}

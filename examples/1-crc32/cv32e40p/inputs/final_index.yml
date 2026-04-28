@@ -1,0 +1,209 @@
+candidates:
+- artifacts:
+    cdsl: gen_final/CUSTOM83.core_desc
+    flat: gen_final/CUSTOM83.flat
+  id: 1
+  metrics:
+    arch: xisaaccustom83single
+    benefit: 0.043460838933002455
+    code_size_reduction_rel: 0.0
+    cost: 703.175049
+    enc_score: 0.9990234375
+    enc_weight: 0.0009765625
+    filtered2_score: 89.00862034529311
+    hls_area: 703.175049
+    hls_area_scaled: 703.175049
+    hls_ii: 1
+    hls_latency: 4
+    hls_num_shared: 1
+    instr: CUSTOM83
+    prelim_score: 89.00862034529311
+    ratio: 6.180657148573322e-05
+    runtime_reduction_rel: 0.043460838933002455
+    seal5_score: 1.0
+    util_score: 0.0869224808059503
+  properties:
+    '#Branches': 0.0
+    '#ConstantNodes': 1.0
+    '#InputNodes': 2.0
+    '#Instrs': 2.0
+    '#Isos': 0.0
+    '#IsosNO': 0.0
+    '#Loads': 0.0
+    '#Mems': 0.0
+    '#Nodes': 2.0
+    '#Operands': .nan
+    '#OutputNodes': 1.0
+    '#Stores': 0.0
+    '#Terminators': 0.0
+    '#UniqueInstrs': 2.0
+    BranchNodes: []
+    ConstantMinBits:
+    - 4
+    ConstantNodes:
+    - 54
+    ConstantSigns:
+    - false
+    ConstantValues:
+    - 8
+    Constraints: []
+    DateTime: 20250827T075850
+    EncodingBitsLeft (32 bits): 10.0
+    EncodingFootprint (32 bits): 0.6
+    EncodingWeight (32 bits): 0.0009765625
+    Freq: 174080.0
+    FullHash: 7b18494b54b9cf9c52c9f43fefac6f0946908913
+    GlobalHash: 47ca197c014734920940da7fb23e682bd252c1f1
+    IOSubHash: 11141598d505b1e6b78c5b6fca6d10a1
+    InputNames:
+    - inp0
+    - inp1
+    InputNodes:
+    - 1
+    - 46
+    InstrName: CUSTOM83
+    Instrs:
+    - XOR
+    - SRLI
+    IsoNodes:
+    - 0
+    - 20
+    IsoWeight: 0.08692248080595036
+    Isos: []
+    IsosNO: []
+    LoadNodes: []
+    Nodes:
+    - 0
+    - 20
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15.0
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandNodes:
+    - 122
+    - 1
+    - 46
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+    OutputNames:
+    - outp0
+    OutputNodes:
+    - 122
+    Parent: .nan
+    Predicates: 256
+    Predicates (str): InstrPredicate.IS_COMMUTABLE
+    Registers: 2
+    ScheduleLength: 3.0
+    Status: 1
+    Status (str): ExportFilter.SELECTED
+    StoreNodes: []
+    SubHash: 928f560366a63fac343dd77f295e28ff
+    TerminatorNodes: []
+    UniqueInstrs:
+    - XOR
+    - SRLI
+    Variations: 0
+    Weight: 0.08692248080595036
+    result: 40
+global:
+  artifacts:
+    ETISS_INSTALL_DIR: install/etiss_install/
+    LLVM_INSTALL_DIR: install/llvm_install/
+  properties:
+  - allowed_enc_sizes:
+    - 32
+    bb: '%bb.0'
+    candidate_count: 91
+    func: rand_beebs
+    ignore_names:
+    - G_PHI
+    - PHI
+    - COPY
+    - PseudoCALLIndirect
+    - PseudoLGA
+    - Select_GPR_Using_CC_GPR
+    - LUI
+    - PseudoMovAddr
+    ignore_op_types:
+    - input
+    - constant
+    - label
+    instr_predicates: 511
+    limit_results: null
+    max_branches: 1
+    max_enc_footprint: 1.0
+    max_enc_weight: 1.0
+    max_inputs: 4
+    max_loads: 1
+    max_mems: 0
+    max_nodes: 1000
+    max_outputs: 2
+    max_path_len: 9
+    max_path_width: 2
+    max_stores: 1
+    min_enc_bits_left: 5
+    min_inputs: 1
+    min_iso_weight: 0.028249806261933866
+    min_nodes: 1
+    min_outputs: 1
+    min_path_len: 1
+    session: isaac-demo-crc32-20250806T131444
+    stage: 32
+    timestamp: 20250827T075822
+    xlen: 32
+  - allowed_enc_sizes:
+    - 32
+    bb: '%bb.3'
+    candidate_count: 43
+    func: benchmark_body
+    ignore_names:
+    - G_PHI
+    - PHI
+    - COPY
+    - PseudoCALLIndirect
+    - PseudoLGA
+    - Select_GPR_Using_CC_GPR
+    - LUI
+    - PseudoMovAddr
+    ignore_op_types:
+    - input
+    - constant
+    - label
+    instr_predicates: 511
+    limit_results: null
+    max_branches: 1
+    max_enc_footprint: 1.0
+    max_enc_weight: 1.0
+    max_inputs: 4
+    max_loads: 1
+    max_mems: 0
+    max_nodes: 1000
+    max_outputs: 2
+    max_path_len: 9
+    max_path_width: 2
+    max_stores: 1
+    min_enc_bits_left: 5
+    min_inputs: 1
+    min_iso_weight: 0.015961031076735955
+    min_nodes: 1
+    min_outputs: 1
+    min_path_len: 1
+    session: isaac-demo-crc32-20250806T131444
+    stage: 32
+    timestamp: 20250827T075850
+    xlen: 32
