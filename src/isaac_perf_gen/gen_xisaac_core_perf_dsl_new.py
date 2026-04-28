@@ -26,6 +26,11 @@ from pathlib import Path
 from collections import defaultdict
 from contextlib import contextmanager
 
+from typing import Optional
+from importlib_resources import files
+
+# from importlib import resources  # Python 3.9+
+
 import yaml
 import pandas as pd
 from mako.template import Template
@@ -45,9 +50,41 @@ def get_permutations(d):
     ]
 
 
+def get_templates_base(core: Optional[str] = None):
+    templates_path = files("isaac_perf_gen.templates")  # .joinpath("message.eml").read_text()
+    # print("templates_path", templates_path)
+    if core is not None:
+        templates_path = templates_path.joinpath(core)
+        # print("templates_path", templates_path)
+    assert Path(templates_path).is_dir()
+    return templates_path
+
+
+def lookup_template(inp: str, core: Optional[str] = None, suffix: Optional[str] = None):
+    # print("lookup_template", inp, core)
+    assert inp is not None
+    assert core is not None
+
+    templates_path = get_templates_base(core=core)
+    if Path(inp).is_file():
+        return Path(inp).resolve()
+    assert isinstance(inp, str)
+    if not inp.endswith(".mako"):
+        if suffix is not None:
+            assert suffix.startswith(".")
+            if not inp.endswith(suffix):
+                inp += suffix
+        inp += ".mako"
+    # print("inp", inp)
+    template_path = templates_path.joinpath(inp)
+    # print("template_path", template_path)
+    assert Path(template_path).is_file(), f"Not a file: {template_path}"
+    return str(Path(template_path))
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-t", "--template", default=None, required=True, help="Base MAKO Template")
+    parser.add_argument("-t", "--template", default=None, help="Base MAKO Template")
     parser.add_argument("-o", "--output", default=None, help="Output .core_perf_dsl file path")
     parser.add_argument("--monitor-template", default=None, help="Mako template for monitor description")
     parser.add_argument(
@@ -72,6 +109,7 @@ def main():
     parser.add_argument("--parts-only", action="store_true", help="Only generate parts")
     parser.add_argument("--render-only", action="store_true", help="Only render final output")
     args = parser.parse_args()
+    core = args.core
     core_name = "XIsaacCore"
 
     @contextmanager
@@ -82,7 +120,8 @@ def main():
             with tempfile.TemporaryDirectory() as tmpdirname:
                 yield Path(tmpdirname)
 
-    template_dirs = [".", "templates/"]
+    templates_path = get_templates_base(core=core)
+    template_dirs = [".", "templates/", templates_path, f"{templates_path}/parts"]
     lookup_dirs = defaultdict(list)
     lookup_dirs2 = []
     xlen = None
@@ -117,7 +156,7 @@ def main():
             drop_fallback_schedules = True
             if drop_fallback_schedules:
                 hls_schedules_df = hls_schedules_df[~hls_schedules_df["Fallback"]]
-            print("hls_schedules_df", hls_schedules_df)
+            # print("hls_schedules_df", hls_schedules_df)
             # input("123")
             # assert args.selected_solutions is not None
             variants_filter = args.variants
@@ -133,19 +172,23 @@ def main():
             assert hls_selected_schedule_metrics_csv.is_file(), f"Missing: {hls_selected_schedule_metrics_csv}"
             hls_variants_df = pd.read_csv(hls_selected_schedule_metrics_csv)
             num_variants = len(hls_variants_df)
-            print("hls_variants_df")
+            # print("hls_variants_df")
             print(hls_variants_df)
-            print("num_variants", num_variants)
+            # print("num_variants", num_variants)
             if variants_filter:
                 hls_variants_df = hls_variants_df[hls_variants_df["Variant idx"].isin(variants_filter)]
             print("hls_variants_df")
             print(hls_variants_df)
-            for _, variant_row in hls_variants_df.iterrows():
-                print("variant_row", variant_row)
-                variant_name = variant_row["Variant name"]
-                print("variant_name", variant_name)
-                variant_details = variant_row["Variant details"]
-                variant_description = variant_row["Variant description"]
+            for idx, variant_row in hls_variants_df.iterrows():
+                # print("idx", idx)
+                # print("variant_row", variant_row)
+                variant_name = variant_row.get("Variant name")
+                # print("variant_name", variant_name)
+                # if variant_name is None:
+                #     variant_name = f"V{idx}"
+                # print("variant_name", variant_name)
+                variant_details = variant_row.get("Variant details")
+                variant_description = variant_row.get("Variant description")
                 total_area_estimate = variant_row["total_area_estimate"]
                 variant_extras[variant_name] = (
                     variant_description,
@@ -164,7 +207,7 @@ def main():
             print("variants", variants)
             # input(">>>")
             for variant_name, variant in variants.items():
-                print("variant", variant)
+                # print("variant", variant)
                 selected_solutions = variant
                 # if args.hls_yaml is None:
                 #     assert args.hls_dir is not None
@@ -194,7 +237,7 @@ def main():
                 for _, row in hls_schedules_df_.iterrows():
                     lats = row["Instruction latencies"]
                     ii = row["II"]
-                    print("ii", ii)
+                    # print("ii", ii)
                     # input("!!!")
                     grp = row["SG"]
                     assert grp not in sg2ii
@@ -216,7 +259,7 @@ def main():
                         assert instr_name not in instr_latencies
                         instr_latencies[instr_name] = lat_
                 instr_latencies2 = {}
-                print("sg2instrs", sg2instrs)
+                # print("sg2instrs", sg2instrs)
                 # print("instr_latencies", instr_latencies)
                 for instr_data in hls_data:
                     if "instruction" not in instr_data:
@@ -224,21 +267,21 @@ def main():
                     instr_name = instr_data["instruction"]
                     schedule = instr_data["schedule"]
                     stage_nums = [x["stage"] for x in schedule]
-                    print("stage_nums", stage_nums)
+                    # print("stage_nums", stage_nums)
                     min_stage, max_stage = min(stage_nums), max(stage_nums)
-                    print("instr_latencies", instr_latencies)
+                    # print("instr_latencies", instr_latencies)
                     # assert instr_latencies[instr_name] == (max_stage + 1)  # TODO: fix
                     lat = max_stage - min_stage + 1
-                    print("lat", lat)
+                    # print("lat", lat)
                     lat = max(1, lat)
-                    print("lat_", lat)
+                    # print("lat_", lat)
                     instr_latencies2[instr_name] = lat
-                print("instr_latencies2", instr_latencies2)
+                # print("instr_latencies2", instr_latencies2)
 
                 # input("!")
                 instr_operands_map = {}
                 instrs_timing = {}
-                print("sg2ii", sg2ii)
+                # print("sg2ii", sg2ii)
                 for candidate_data in candidates_data:
                     candidate_properties = candidate_data["properties"]
                     instr_name = candidate_properties["InstrName"]
@@ -267,14 +310,14 @@ def main():
                             operand_dir,
                         )
                     instr_operands_map[instr_name] = operands_map
-                    print("instr_name", instr_name)
-                    print("instr_latencies2", instr_latencies2)
+                    # print("instr_name", instr_name)
+                    # print("instr_latencies2", instr_latencies2)
                     instr_cycles = instr_latencies2[instr_name]
                     sgs = [sg for sg, instrs in sg2instrs.items() if instr_name in instrs]
-                    print("sgs", sgs)
+                    # print("sgs", sgs)
                     assert len(sgs) == 1
                     sg = sgs[0]
-                    print("sg", sg)
+                    # print("sg", sg)
                     ii = sg2ii[sg]
                     instr_timing = (instr_cycles, ii)
                     instrs_timing[instr_name] = instr_timing
@@ -311,8 +354,9 @@ def main():
                 assert core_parts_map is not None, f"Parts not found for core '{args.core}'"
                 assert core_parts_map2 is not None, f"Parts not found for core '{args.core}'"
                 for part_file, part_tmpl in core_parts_map.items():
+                    # print("template_dirs", template_dirs)
                     mylookup = TemplateLookup(directories=template_dirs)
-                    part_template = Template(filename=f"templates/{part_tmpl}", lookup=mylookup)
+                    part_template = Template(filename=f"{templates_path}/parts/{part_tmpl}", lookup=mylookup)
                     part_content = part_template.render(
                         instr_names=instr_names,
                         instr_operands_map=instr_operands_map,
@@ -320,14 +364,17 @@ def main():
                         sg2instrs=sg2instrs,
                         variant_name=variant_name,
                     )
-                    subdir = dest_dir / variant_name
+                    if variant_name is not None:
+                        subdir = dest_dir / variant_name
+                    else:
+                        subdir = dest_dir
                     subdir.mkdir(exist_ok=True)
                     part_dest = subdir / part_file
                     with open(part_dest, "w") as f:
                         f.write(part_content)
                 for part_file, part_tmpl in core_parts_map2.items():
                     mylookup = TemplateLookup(directories=template_dirs)
-                    part_template = Template(filename=f"templates/{part_tmpl}", lookup=mylookup)
+                    part_template = Template(filename=f"{templates_path}/parts/{part_tmpl}", lookup=mylookup)
                     part_content = part_template.render(
                         instr_names=instr_names,
                         instr_operands_map=instr_operands_map,
@@ -340,15 +387,28 @@ def main():
                         f.write(part_content)
 
         # all_content = ""
-        print("lookup_dirs", lookup_dirs)
-        print("lookup_dirs2", lookup_dirs2)
-        print("template_dirs", template_dirs)
+        # print("lookup_dirs", lookup_dirs)
+        # print("lookup_dirs2", lookup_dirs2)
+        # print("template_dirs", template_dirs)
         if not args.parts_only:
             # for variant_name, variant in variants.items():
             if True:
                 # mylookup = TemplateLookup(directories=template_dirs + lookup_dirs[variant_name])
-                mylookup = TemplateLookup(directories=template_dirs + lookup_dirs2)
-                mytemplate = Template(filename=args.template, lookup=mylookup)
+                # print("lookup_dirs2", lookup_dirs2)
+                all_lookup = template_dirs + lookup_dirs2
+                # print("all_lookup", all_lookup)
+                mylookup = TemplateLookup(directories=all_lookup)
+                # print("mylookup", mylookup)
+                template = args.template
+                if template is None:
+                    assert core is not None
+                    core2template = {"cv32e40p": "CV32E40PXISAAC"}
+                    template = core2template.get(core)
+                    assert template is not None, f"Could not find template for core {core}"
+                template = lookup_template(template, core=args.core, suffix=".corePerfDsl")
+                # print("template", template)
+                assert template is not None
+                mytemplate = Template(filename=template, lookup=mylookup)
                 content = mytemplate.render(variants=variants, new=True)
                 # if variant_name is not None:
                 #     header = f"// Variant: {variant_name}\n"
@@ -360,8 +420,15 @@ def main():
 
     monitor_name = None
     if args.monitor_dest:
-        assert args.monitor_template
-        monitor_template = Path(args.monitor_template)
+        monitor_template = args.monitor_template
+        if monitor_template is None:
+            assert core is not None
+            core2monitor_template = {}
+            monitor_template = core2monitor_template.get(core, "InstructionTrace_XISAAC")
+            assert monitor_template is not None, f"Could not find monitor_template for core {core}"
+        monitor_template = lookup_template(monitor_template, core=args.core, suffix=".json")
+        # print("monitor_template", monitor_template)
+        monitor_template = Path(monitor_template)
         assert monitor_template.is_file()
         monitor_dest = Path(args.monitor_dest)
         assert xlen is not None
@@ -421,7 +488,10 @@ arch.cpu={core_name}
 plugin.perfEst.uArch={uarch}
 """
                 ini_dir = Path(args.ini_dest)
-                assert ini_dir.is_dir(), f"Not a directory: {ini_dir}"
+                if ini_dir.exists():
+                    assert ini_dir.is_dir(), f"Not a directory: {ini_dir}"
+                else:
+                    ini_dir.mkdir()
                 if trace_mode:
                     ini_content += f"""plugin.perfEst.print=1
 plugin.perfEst.printDir=.
@@ -438,9 +508,11 @@ plugin.tracePrinter.stream.fileName=instr_trace
                 with open(ini_file, "w") as f:
                     f.write(ini_content)
 
+    print("args.output", args.output)
     if args.output is None:
         print(content)
     else:
+        print("write")
         with open(args.output, "w") as f:
             f.write(content)
 
