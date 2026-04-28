@@ -24,10 +24,14 @@ Resource {DIV(divider), DIVU(divider_u)}
 Resource {IPort_R, DPort_R, DPort_W}
 
 // = XISAAC Resources =
-<%include file="cv32e40p_xisaac_virtual_resources.part"/>
+<%include file="/cv32e40p_xisaac_virtual_resources.part"/>
 % for variant_name in variants:
+% if variant_name is None:
+<%include file="/cv32e40p_xisaac_resources.part"/>
+% else:
 // Variant: ${variant_name}
-<%include file="${variant_name}/cv32e40p_xisaac_resources.part"/>
+<%include file="/${variant_name}/cv32e40p_xisaac_resources.part"/>
+% endif
 % endfor
 // --------------------
 
@@ -53,12 +57,19 @@ Microaction {
 
 // = XISAAC Microactions =
 virtual Microaction {
-<%include file="cv32e40p_xisaac_virtual_microactions.part"/>
+<%include file="/cv32e40p_xisaac_virtual_microactions.part"/>
 }
 % for variant_name in variants:
+% if variant_name is None:
+% else:
 // Variant: ${variant_name}
+% endif
 Microaction {
-<%include file="${variant_name}/cv32e40p_xisaac_microactions.part"/>
+% if variant_name is None:
+<%include file="/cv32e40p_xisaac_microactions.part"/>
+% else:
+<%include file="/${variant_name}/cv32e40p_xisaac_microactions.part"/>
+% endif
 }
 % endfor
 // -----------------------
@@ -66,8 +77,13 @@ Microaction {
 /************************************ Stages & Pipeline ************************************/
 
 % if new:
-<%include file="${variant_name}/cv32e40p_xisaac_stages.part"/>
-<%include file="${variant_name}/cv32e40p_xisaac_pipelines.part"/>
+% if variant_name is None:
+<%include file="/cv32e40p_xisaac_stages.part"/>
+<%include file="/cv32e40p_xisaac_pipelines.part"/>
+% else:
+<%include file="/${variant_name}/cv32e40p_xisaac_stages.part"/>
+<%include file="/${variant_name}/cv32e40p_xisaac_pipelines.part"/>
+% endif
 % endif
 
 Stage {
@@ -81,7 +97,7 @@ Stage {
     uA_MUL,
     uA_MULH,
     // = XISAAC EX stage =
-<%include file="cv32e40p_xisaac_ex_stages.part"/>
+<%include file="/cv32e40p_xisaac_ex_stages.part"/>
     // -------------------
     uA_DIV,
     uA_DIVU
@@ -137,7 +153,7 @@ InstrGroup {
 
 // = XISAAC Instr Groups =
 InstrGroup {
-<%include file="cv32e40p_xisaac_instr_groups.part"/>
+<%include file="/cv32e40p_xisaac_instr_groups.part"/>
 }
 // -----------------------
 
@@ -161,7 +177,7 @@ MicroactionMapping {
 
 // = XISAAC Microaction Mapping =
 MicroactionMapping {
-<%include file="cv32e40p_xisaac_microaction_mapping.part"/>
+<%include file="/cv32e40p_xisaac_microaction_mapping.part"/>
 }
 // ------------------------------
 
@@ -193,7 +209,7 @@ TraceValueMapping {
     rd  = "$bitfield{rd}"
   },
   // = XISAAC Trace Value Mapping =
-<%include file="cv32e40p_xisaac_trace_value_mapping.part"/>
+<%include file="/cv32e40p_xisaac_trace_value_mapping.part"/>
   // ------------------------------
   Div_Ra_Rb : {
     rs1 = "$bitfield{rs1}",
@@ -240,7 +256,11 @@ TraceValueMapping {
 
 /**************************************** Variants *****************************************/
 % for variant_name in variants:
+% if variant_name is None:
+<%include file="/cv32e40p_xisaac_model.part"/>
+% else:
 // Variant: ${variant_name}
-<%include file="${variant_name}/cv32e40p_xisaac_model.part"/>
+<%include file="/${variant_name}/cv32e40p_xisaac_model.part"/>
+% endif
 % endfor
 // --------------------
