@@ -1,4 +1,4 @@
-isaac\_perf\_gen.gen\_xisaac\_core\_perf\_dsl\_new
+﻿isaac\_perf\_gen.gen\_xisaac\_core\_perf\_dsl\_new
 ==================================================
 
 .. automodule:: isaac_perf_gen.gen_xisaac_core_perf_dsl_new
@@ -9,7 +9,10 @@ isaac\_perf\_gen.gen\_xisaac\_core\_perf\_dsl\_new
    .. autosummary::
    
       contextmanager
+      files
       get_permutations
+      get_templates_base
+      lookup_template
       main
    
    .. rubric:: Classes
