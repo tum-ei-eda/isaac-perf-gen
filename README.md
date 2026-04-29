@@ -12,3 +12,47 @@
 Generating CorePerfDSL Performance Models for ISE candidates
 
 https://tum-ei-eda.github.io/isaac-perf-gen
+
+## Features
+
+This project ships multiple sub-projects:
+- `isaac_perf_gen`: Emits CorePerfDSL and auxiliary files based on provides GenIE and HLS files.
+- `isaac_perf_verify`: Wrapper for CorePerfDSL API to check if the syntax of the generated files is ok.
+- `isaac_fake_hls`: WIP! Sample many possible uarchs for a given ISE to design space exploration without actually running a HLS backend.
+- `isaac_load_cdsl`: WIP! Allows passing `.core_desc` inputs instead of a GenIE-specific `index.yaml`
+
+## Prerequisites
+
+```
+pip install -e .
+
+# Optional:
+pip install -e ".[dev]"
+pip install -e ".[verify]"
+```
+
+## Usage
+
+### `isaac_perf_gen`
+
+TODO
+
+### `isaac_perf_verify`
+
+TODO
+
+### ...
+
+## Examples
+
+```sh
+cd examples/1-crc32/cv32e40p
+./generate.sh
+
+cd examples/1-crc32/cva6
+./generate.sh
+```
+
+## Development
+
+TODO
