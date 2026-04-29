@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-${(%):-%N}}" )" &> /dev/null && pwd )
 
 CORE=cv32e40p
@@ -27,3 +29,5 @@ isaac-perf-gen -c $CORE \
     --ini-dest $INI_OUT --uarchs-dest $UARCHS_OUT \
     --monitor-dest $MONITOR_OUT $EXTRA_ARGS
     # --monitor-template $MONITOR_IN
+
+isaac-perf-verify $CDSL_PERF_OUT

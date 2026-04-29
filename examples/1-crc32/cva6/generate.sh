@@ -4,14 +4,9 @@ set -e
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-${(%):-%N}}" )" &> /dev/null && pwd )
 
-# CORE=cva5
-# ARCH_NAME=XIsaac
-# UARCH_NAME=CVA5XISAAC
-# MONITOR_NAME=InstructionTrace_XISAAC
-
-CORE=cv32e40p
+CORE=cva6
 ARCH_NAME=XIsaac
-UARCH_NAME=CV32E40PXISAAC
+UARCH_NAME=CVA6XISAAC
 MONITOR_NAME=InstructionTrace_XISAAC
 
 INPUTS_DIR=$SCRIPT_DIR/inputs
