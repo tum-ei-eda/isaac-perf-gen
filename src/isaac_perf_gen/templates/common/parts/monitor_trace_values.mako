@@ -7,7 +7,7 @@ for instr_name, instr_operands in instr_operands_map.items():
         names.add(operand_name)
         if operand_type == "REG":
             names.add(f"{operand_name}_data")
-unknown_names = names - known_names
+unknown_names = sorted(list(names - known_names))
 %>\
 % for i, name in enumerate(unknown_names):
 % if False and i == (len(unknown_names) - 1):
