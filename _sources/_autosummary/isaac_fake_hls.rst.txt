@@ -1,0 +1,14 @@
+﻿isaac\_fake\_hls
+================
+
+.. automodule:: isaac_fake_hls
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   cli
+   fake_hls

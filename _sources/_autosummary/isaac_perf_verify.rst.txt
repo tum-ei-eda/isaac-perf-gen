@@ -1,0 +1,14 @@
+﻿isaac\_perf\_verify
+===================
+
+.. automodule:: isaac_perf_verify
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   cli
+   verify

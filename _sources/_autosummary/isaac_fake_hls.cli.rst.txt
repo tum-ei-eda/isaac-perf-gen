@@ -1,0 +1,12 @@
+isaac\_fake\_hls.cli
+====================
+
+.. automodule:: isaac_fake_hls.cli
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      main
+   

@@ -1,0 +1,19 @@
+isaac\_perf\_verify.verify
+==========================
+
+.. automodule:: isaac_perf_verify.verify
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      main
+      run_verify
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Path
+   

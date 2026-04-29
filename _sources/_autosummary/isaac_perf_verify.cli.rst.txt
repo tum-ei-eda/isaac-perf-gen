@@ -1,0 +1,12 @@
+isaac\_perf\_verify.cli
+=======================
+
+.. automodule:: isaac_perf_verify.cli
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      main
+   
