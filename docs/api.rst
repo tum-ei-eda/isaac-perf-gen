@@ -6,3 +6,6 @@ API Reference
    :recursive:
 
    isaac_perf_gen
+   isaac_perf_verify
+   isaac_fake_hls
+   isaac_load_cdsl
