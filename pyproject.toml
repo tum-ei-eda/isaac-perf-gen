@@ -22,6 +22,7 @@ Issues = "https://github.com/tum-ei-eda/isaac-perf-gen/issues"
 
 [project.scripts]
 isaac-perf-gen = "isaac_perf_gen.cli:main"
+isaac-fake-hls = "isaac_fake_hls.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
