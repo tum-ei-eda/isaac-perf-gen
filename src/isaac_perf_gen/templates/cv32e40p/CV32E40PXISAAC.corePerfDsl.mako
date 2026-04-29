@@ -105,10 +105,13 @@ Stage {
   WB_stage (uA_Memory_R, uA_Memory_W)
 }
 
-Pipeline CV32E40PXISAAC_pipeline (IF_stage -> ID_stage -> EX_stage -> WB_stage)
+Pipeline ${uarch_name}_pipeline (IF_stage -> ID_stage -> EX_stage -> WB_stage)
 
 /************************************* External Models *************************************/
 TraceValue {rs1, rs2, rd, pc, brTarget, rs2_data}
+// = XISAAC Trace Values =
+<%include file="/cv32e40p_xisaac_trace_values.part"/>
+// -------------------
 
 ConnectorModel regModel (
   link : "models/common/StandardRegisterModel.h"

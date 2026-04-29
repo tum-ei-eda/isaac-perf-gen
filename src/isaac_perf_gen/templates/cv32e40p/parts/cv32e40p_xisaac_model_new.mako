@@ -2,9 +2,9 @@
 variant_prefix = f"{variant_name}_" if variant_name is not None else ""
 variant_suffix = f"{variant_name}" if variant_name is not None else ""
 %>
-CorePerfModel CV32E40PXISAAC${variant_suffix} (
-  core : "XIsaacCore"
-  use Pipeline : CV32E40PXISAAC_pipeline
+CorePerfModel ${uarch_name}${variant_suffix} (
+  core : "${core_name}"
+  use Pipeline : ${uarch_name}_pipeline
   use ConnectorModel : {regModel, staBranchPredModel}
   assign Resource : {
 % for i, instr_name in enumerate(instr_names):
