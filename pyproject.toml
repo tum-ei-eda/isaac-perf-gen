@@ -22,6 +22,7 @@ Issues = "https://github.com/tum-ei-eda/isaac-perf-gen/issues"
 
 [project.scripts]
 isaac-perf-gen = "isaac_perf_gen.cli:main"
+isaac-perf-verify = "isaac_perf_verify.cli:main"
 isaac-fake-hls = "isaac_fake_hls.cli:main"
 isaac-load-cdsl = "isaac_load_cdsl.cli:main"
 
@@ -40,6 +41,7 @@ dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools.dynamic.optional-dependencies]
 dev = { file = ["requirements_dev.txt"] }
+verify = { file = ["requirements_verify.txt"] }
 
 [tool.setuptools_scm]
 
