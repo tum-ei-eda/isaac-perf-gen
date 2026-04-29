@@ -23,6 +23,15 @@ This project ships multiple sub-projects:
 
 ## Prerequisites
 
+Make sure to have Python v3.10 or newer installed and activate a virtual environment before installing this python package:
+
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Installation via PIP:
+
 ```
 pip install -e .
 
