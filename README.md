@@ -50,6 +50,8 @@ TODO
 
 TODO
 
+First, install the **custom** M2-ISA-R-Perf package from: https://github.com/tum-ei-eda/M2-ISA-R-Perf/tree/packaging!
+
 ### ...
 
 ## Examples
