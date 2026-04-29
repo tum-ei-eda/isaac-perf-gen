@@ -14,8 +14,8 @@
 	{"name": "jump_pc"},
 	{"name": "csr"},
 	{"name": "csr_reg"},
-            {"name": "rs1"},
             {"name": "rd"},
+            {"name": "rs1"},
             {"name": "rs2"},
 
 	{"name": "mem_addr"}

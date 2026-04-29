@@ -108,8 +108,8 @@ Pipeline CV32E40PXISAAC_pipeline (IF_stage -> ID_stage -> EX_stage -> WB_stage)
 TraceValue {rs1, rs2, rd, pc, brTarget, rs2_data}
 // = XISAAC Trace Values =
 TraceValue {
-  rs1_data,
-  rd_data
+  rd_data,
+  rs1_data
 }
 
 // -------------------
