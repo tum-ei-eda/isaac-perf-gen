@@ -50,7 +50,7 @@ def get_permutations(d):
     ]
 
 
-def get_templates_base(core: Optional[str] = None):
+def get_templates_base(core: Optional[str] = None, part: bool = False):
     templates_path = files("isaac_perf_gen.templates")  # .joinpath("message.eml").read_text()
     # print("templates_path", templates_path)
     if core is not None:
@@ -58,18 +58,25 @@ def get_templates_base(core: Optional[str] = None):
         # print("templates_path", templates_path)
     else:
         templates_path = templates_path.joinpath("/")
+    if part:
+        templates_path = templates_path.joinpath("parts")
+
     # print("templates_path", templates_path, type(templates_path))
     assert Path(templates_path).is_dir()
     return templates_path
 
 
-def lookup_template(inp: str, core: Optional[str] = None, suffix: Optional[str] = None):
-    # print("lookup_template", inp, core)
+def lookup_template(inp: str, core: Optional[str] = None, suffix: Optional[str] = None, part: bool = False):
+    # print("lookup_template", inp, core, suffix, part)
     assert inp is not None
     inp = str(inp)
-    # assert core is not None
+    assert core is not None
 
-    templates_path = get_templates_base(core=core)
+    templates_path = get_templates_base(core=core, part=part)
+    # print("templates_path", templates_path)
+    # if part:
+    #     template_path = templates_path.joinpath("parts")
+    #     print("templates_path2", templates_path)
     if Path(inp).is_file():
         return Path(inp).resolve()
     assert isinstance(inp, str)
@@ -84,8 +91,9 @@ def lookup_template(inp: str, core: Optional[str] = None, suffix: Optional[str] 
     template_path = Path(template_path)
     # print("template_path", template_path)
     if not template_path.is_file():
-        if core is not None:
-            return lookup_template(inp, core=None, suffix=suffix)
+        # if core is not None and core != "common":
+        if core is not None and core != "common":
+            return lookup_template(inp, core="common", suffix=suffix, part=part)
         assert False, f"Not a file: {template_path}"
     return str(Path(template_path))
 
@@ -351,18 +359,18 @@ def main():
                 lookup_dirs2.append(temp_dir)
                 cores_parts_map = {
                     "cv32e40p": {
-                        "cv32e40p_xisaac_microactions.part": "cv32e40p_xisaac_microactions_new.mako",
-                        "cv32e40p_xisaac_resources.part": "cv32e40p_xisaac_resources_new.mako",
+                        "cv32e40p_xisaac_microactions.part": "xisaac_microactions_new.mako",
+                        "cv32e40p_xisaac_resources.part": "xisaac_resources_new.mako",
                         "cv32e40p_xisaac_model.part": "cv32e40p_xisaac_model_new.mako",
-                        "cv32e40p_xisaac_stages.part": "cv32e40p_xisaac_stages.mako",
-                        "cv32e40p_xisaac_pipelines.part": "cv32e40p_xisaac_pipelines.mako",
+                        "cv32e40p_xisaac_stages.part": "xisaac_stages.mako",
+                        "cv32e40p_xisaac_pipelines.part": "xisaac_pipelines.mako",
                     },
                     "cva6": {
-                        "cva6_xisaac_microactions.part": "cva6_xisaac_microactions_new.mako",
-                        "cva6_xisaac_resources.part": "cva6_xisaac_resources_new.mako",
+                        "cva6_xisaac_microactions.part": "xisaac_microactions_new.mako",
+                        "cva6_xisaac_resources.part": "xisaac_resources_new.mako",
                         "cva6_xisaac_model.part": "cva6_xisaac_model_new.mako",
-                        "cva6_xisaac_stages.part": "cva6_xisaac_stages.mako",
-                        "cva6_xisaac_pipelines.part": "cva6_xisaac_pipelines.mako",
+                        "cva6_xisaac_stages.part": "xisaac_stages.mako",
+                        "cva6_xisaac_pipelines.part": "xisaac_pipelines.mako",
                     },
                 }
                 trace_values = set()
@@ -382,20 +390,20 @@ def main():
                 cores_parts_map2 = {
                     "cv32e40p": {
                         "cv32e40p_xisaac_microaction_mapping.part": "cv32e40p_xisaac_microaction_mapping_new.mako",
-                        "cv32e40p_xisaac_ex_stages.part": "cv32e40p_xisaac_ex_stages_new.mako",
-                        "cv32e40p_xisaac_instr_groups.part": "cv32e40p_xisaac_instr_groups.mako",
-                        "cv32e40p_xisaac_trace_value_mapping.part": "cv32e40p_xisaac_trace_value_mapping.mako",
-                        "cv32e40p_xisaac_virtual_microactions.part": "cv32e40p_xisaac_virtual_microactions_new.mako",
-                        "cv32e40p_xisaac_virtual_resources.part": "cv32e40p_xisaac_virtual_resources_new.mako",
+                        "cv32e40p_xisaac_ex_stages.part": "xisaac_ex_stages_new.mako",
+                        "cv32e40p_xisaac_instr_groups.part": "xisaac_instr_groups.mako",
+                        "cv32e40p_xisaac_trace_value_mapping.part": "xisaac_trace_value_mapping.mako",
+                        "cv32e40p_xisaac_virtual_microactions.part": "xisaac_virtual_microactions_new.mako",
+                        "cv32e40p_xisaac_virtual_resources.part": "xisaac_virtual_resources_new.mako",
                         "cv32e40p_xisaac_trace_values.part": "cv32e40p_xisaac_trace_values.mako",
                     },
                     "cva6": {
                         "cva6_xisaac_microaction_mapping.part": "cva6_xisaac_microaction_mapping_new.mako",
-                        "cva6_xisaac_ex_stages.part": "cva6_xisaac_ex_stages_new.mako",
-                        "cva6_xisaac_instr_groups.part": "cva6_xisaac_instr_groups.mako",
-                        "cva6_xisaac_trace_value_mapping.part": "cva6_xisaac_trace_value_mapping.mako",
-                        "cva6_xisaac_virtual_microactions.part": "cva6_xisaac_virtual_microactions_new.mako",
-                        "cva6_xisaac_virtual_resources.part": "cva6_xisaac_virtual_resources_new.mako",
+                        "cva6_xisaac_ex_stages.part": "xisaac_ex_stages_new.mako",
+                        "cva6_xisaac_instr_groups.part": "xisaac_instr_groups.mako",
+                        "cva6_xisaac_trace_value_mapping.part": "xisaac_trace_value_mapping.mako",
+                        "cva6_xisaac_virtual_microactions.part": "xisaac_virtual_microactions_new.mako",
+                        "cva6_xisaac_virtual_resources.part": "xisaac_virtual_resources_new.mako",
                         "cva6_xisaac_trace_values.part": "cva6_xisaac_trace_values.mako",
                     },
                 }
@@ -406,7 +414,10 @@ def main():
                 for part_file, part_tmpl in core_parts_map.items():
                     # print("template_dirs", template_dirs)
                     mylookup = TemplateLookup(directories=template_dirs)
-                    part_template = Template(filename=f"{templates_path}/parts/{part_tmpl}", lookup=mylookup)
+                    # part_template = Template(filename=f"{templates_path}/parts/{part_tmpl}", lookup=mylookup)
+                    part_tmpl = lookup_template(part_tmpl, core=args.core, suffix=".corePerfDsl", part=True)
+                    part_template = Template(filename=part_tmpl, lookup=mylookup)
+                    assert part_tmpl is not None
                     part_content = part_template.render(
                         instr_names=instr_names,
                         instr_operands_map=instr_operands_map,
@@ -425,8 +436,13 @@ def main():
                     with open(part_dest, "w") as f:
                         f.write(part_content)
                 for part_file, part_tmpl in core_parts_map2.items():
+                    # print("part_file", part_file)
+                    # print("part_tmpl", part_tmpl)
+                    part_tmpl = lookup_template(part_tmpl, core=args.core, suffix=".corePerfDsl", part=True)
+                    assert part_tmpl is not None
                     mylookup = TemplateLookup(directories=template_dirs)
-                    part_template = Template(filename=f"{templates_path}/parts/{part_tmpl}", lookup=mylookup)
+                    # part_template = Template(filename=f"{templates_path}/parts/{part_tmpl}", lookup=mylookup)
+                    part_template = Template(filename=part_tmpl, lookup=mylookup)
                     part_content = part_template.render(
                         instr_names=instr_names,
                         instr_operands_map=instr_operands_map,
