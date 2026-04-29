@@ -1,5 +1,0 @@
-  XIsaac_CUSTOM0 : {
-    rs1 = "$bitfield{rs1}",
-    rs2 = "$bitfield{rs2}",
-    rd  = "$bitfield{rd}"
-  },
