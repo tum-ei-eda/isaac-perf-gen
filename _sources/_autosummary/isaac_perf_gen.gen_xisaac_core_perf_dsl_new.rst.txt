@@ -8,19 +8,8 @@
 
    .. autosummary::
    
-      contextmanager
-      files
       get_permutations
       get_templates_base
       lookup_template
       main
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      Path
-      Template
-      TemplateLookup
-      defaultdict
    

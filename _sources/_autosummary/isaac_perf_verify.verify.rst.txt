@@ -11,9 +11,3 @@ isaac\_perf\_verify.verify
       main
       run_verify
    
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      Path
-   
