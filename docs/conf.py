@@ -24,7 +24,7 @@ extensions = [
 ]
 numpydoc_show_class_members = False
 autosummary_generate = True  # Turn on sphinx.ext.autosummary
-autosummary_imported_members = True
+autosummary_imported_members = False
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
