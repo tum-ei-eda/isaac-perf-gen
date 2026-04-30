@@ -34,10 +34,6 @@ isaac-load-cdsl $CDSL_IN -o $INDEX_FILE -I $RV_BASE --xlen $XLEN --set $SET_NAME
 
 isaac-fake-hls $INDEX_FILE -o $HLS_DIR --set $SET_NAME --lats "$FAKE_HLS_LATS" --strategies "$FAKE_HLS_STRATEGIES"
 
-
-
-# TODO: fake hls
-
 isaac-perf-gen -c $CORE \
     --index $INDEX_FILE --hls-dir $HLS_DIR \
     --temp-dir $TEMP_OUT -o $CDSL_PERF_OUT \
