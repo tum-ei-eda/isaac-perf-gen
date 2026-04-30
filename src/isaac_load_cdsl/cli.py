@@ -18,6 +18,6 @@
 #
 """ISAAC CoreDSL Loader CLI."""
 
-from .load_cdsl import main
+from .cdsl_loader import main
 
 __all__ = ["main"]
