@@ -1,0 +1,792 @@
+/*
+ * Copyright 2024 Chair of EDA, Technical University of Munich
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *	 http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*********************************** Microaction Section ***********************************/
+Connector {Pc, Pc_np, Pc_p}
+Connector {Xa, Xb, Xd}
+
+Resource {PCGen, Decoder, JumpDecoder, ALU, LSU, CSR}
+Resource {MUL, MULH(5)}
+Resource {DIV(divider), DIVU(divider_u)}
+Resource {IPort_R, DPort_R, DPort_W}
+
+// = XISAAC Resources =
+virtual Resource {
+    vCFU0_PUSH_WEIGHTS_I,
+    vCFU0_PUSH_WEIGHTS_X,
+    vCFU0_PUSH_WEIGHTS_O,
+    vCFU0_SET_CODEBOOK_2B_I,
+    vCFU0_SET_CODEBOOK_2B_X,
+    vCFU0_SET_CODEBOOK_2B_O,
+    vCFU0_SET_CODEBOOK_4B_I,
+    vCFU0_SET_CODEBOOK_4B_X,
+    vCFU0_SET_CODEBOOK_4B_O,
+    vCFU0_SET_CODEBOOK_16B_I,
+    vCFU0_SET_CODEBOOK_16B_X,
+    vCFU0_SET_CODEBOOK_16B_O,
+    vCFU0_ALU_MAC_I,
+    vCFU0_ALU_MAC_X,
+    vCFU0_ALU_MAC_O,
+    vCFU0_ALU_RST_I,
+    vCFU0_ALU_RST_X,
+    vCFU0_ALU_RST_O,
+    vCFU0_MAC_READ_I,
+    vCFU0_MAC_READ_X,
+    vCFU0_MAC_READ_O,
+    vCFU0_MAC_READ_NO_RESET_I,
+    vCFU0_MAC_READ_NO_RESET_X,
+    vCFU0_MAC_READ_NO_RESET_O,
+    vCFU0_DEBUG_DUMP_I,
+    vCFU0_DEBUG_DUMP_X,
+    vCFU0_DEBUG_DUMP_O
+}
+
+// Variant: V0
+Resource {V0_CFU0_PUSH_WEIGHTS_I(1), V0_CFU0_PUSH_WEIGHTS_X(0), V0_CFU0_PUSH_WEIGHTS_O(0)}
+Resource {V0_CFU0_SET_CODEBOOK_2B_I(1), V0_CFU0_SET_CODEBOOK_2B_X(0), V0_CFU0_SET_CODEBOOK_2B_O(0)}
+Resource {V0_CFU0_SET_CODEBOOK_4B_I(1), V0_CFU0_SET_CODEBOOK_4B_X(0), V0_CFU0_SET_CODEBOOK_4B_O(0)}
+Resource {V0_CFU0_SET_CODEBOOK_16B_I(1), V0_CFU0_SET_CODEBOOK_16B_X(0), V0_CFU0_SET_CODEBOOK_16B_O(0)}
+Resource {V0_CFU0_ALU_MAC_I(1), V0_CFU0_ALU_MAC_X(0), V0_CFU0_ALU_MAC_O(0)}
+Resource {V0_CFU0_ALU_RST_I(1), V0_CFU0_ALU_RST_X(0), V0_CFU0_ALU_RST_O(0)}
+Resource {V0_CFU0_MAC_READ_I(1), V0_CFU0_MAC_READ_X(0), V0_CFU0_MAC_READ_O(0)}
+Resource {V0_CFU0_MAC_READ_NO_RESET_I(1), V0_CFU0_MAC_READ_NO_RESET_X(0), V0_CFU0_MAC_READ_NO_RESET_O(0)}
+Resource {V0_CFU0_DEBUG_DUMP_I(1), V0_CFU0_DEBUG_DUMP_X(0), V0_CFU0_DEBUG_DUMP_O(0)}
+
+// Variant: V1
+Resource {V1_CFU0_PUSH_WEIGHTS_I(4), V1_CFU0_PUSH_WEIGHTS_X(0), V1_CFU0_PUSH_WEIGHTS_O(0)}
+Resource {V1_CFU0_SET_CODEBOOK_2B_I(4), V1_CFU0_SET_CODEBOOK_2B_X(0), V1_CFU0_SET_CODEBOOK_2B_O(0)}
+Resource {V1_CFU0_SET_CODEBOOK_4B_I(4), V1_CFU0_SET_CODEBOOK_4B_X(0), V1_CFU0_SET_CODEBOOK_4B_O(0)}
+Resource {V1_CFU0_SET_CODEBOOK_16B_I(4), V1_CFU0_SET_CODEBOOK_16B_X(0), V1_CFU0_SET_CODEBOOK_16B_O(0)}
+Resource {V1_CFU0_ALU_MAC_I(4), V1_CFU0_ALU_MAC_X(0), V1_CFU0_ALU_MAC_O(0)}
+Resource {V1_CFU0_ALU_RST_I(4), V1_CFU0_ALU_RST_X(0), V1_CFU0_ALU_RST_O(0)}
+Resource {V1_CFU0_MAC_READ_I(4), V1_CFU0_MAC_READ_X(0), V1_CFU0_MAC_READ_O(0)}
+Resource {V1_CFU0_MAC_READ_NO_RESET_I(4), V1_CFU0_MAC_READ_NO_RESET_X(0), V1_CFU0_MAC_READ_NO_RESET_O(0)}
+Resource {V1_CFU0_DEBUG_DUMP_I(4), V1_CFU0_DEBUG_DUMP_X(0), V1_CFU0_DEBUG_DUMP_O(0)}
+
+// Variant: V2
+Resource {V2_CFU0_PUSH_WEIGHTS_I(1), V2_CFU0_PUSH_WEIGHTS_X(0), V2_CFU0_PUSH_WEIGHTS_O(1)}
+Resource {V2_CFU0_SET_CODEBOOK_2B_I(1), V2_CFU0_SET_CODEBOOK_2B_X(0), V2_CFU0_SET_CODEBOOK_2B_O(1)}
+Resource {V2_CFU0_SET_CODEBOOK_4B_I(1), V2_CFU0_SET_CODEBOOK_4B_X(0), V2_CFU0_SET_CODEBOOK_4B_O(1)}
+Resource {V2_CFU0_SET_CODEBOOK_16B_I(1), V2_CFU0_SET_CODEBOOK_16B_X(0), V2_CFU0_SET_CODEBOOK_16B_O(1)}
+Resource {V2_CFU0_ALU_MAC_I(1), V2_CFU0_ALU_MAC_X(0), V2_CFU0_ALU_MAC_O(1)}
+Resource {V2_CFU0_ALU_RST_I(1), V2_CFU0_ALU_RST_X(0), V2_CFU0_ALU_RST_O(1)}
+Resource {V2_CFU0_MAC_READ_I(1), V2_CFU0_MAC_READ_X(0), V2_CFU0_MAC_READ_O(1)}
+Resource {V2_CFU0_MAC_READ_NO_RESET_I(1), V2_CFU0_MAC_READ_NO_RESET_X(0), V2_CFU0_MAC_READ_NO_RESET_O(1)}
+Resource {V2_CFU0_DEBUG_DUMP_I(1), V2_CFU0_DEBUG_DUMP_X(0), V2_CFU0_DEBUG_DUMP_O(1)}
+
+// --------------------
+
+Microaction {
+  uA_IFetch        (Pc -> IPort_R),
+  uA_PCGen         (Pc -> PCGen -> Pc_p),
+  uA_Decode        (Decoder),
+  uA_JumpDecode    (JumpDecoder -> Pc_np),
+  uA_JumpDecodeReg (Xa -> JumpDecoder -> Pc_np),
+  uA_OF_A          (Xa),
+  uA_OF_B          (Xb),
+  uA_ALU_RegUpdate (ALU -> Xd),
+  uA_ALU_Branch    (ALU -> Pc_np),
+  uA_CSR           (CSR -> Xd),
+  uA_LSU           (LSU),
+  uA_MUL           (MUL -> Xd),
+  uA_MULH          (MULH -> Xd),
+  uA_DIV           (DIV -> Xd),
+  uA_DIVU          (DIVU -> Xd),
+  uA_Memory_R      (DPort_R -> Xd),
+  uA_Memory_W      (DPort_W)
+}
+
+// = XISAAC Microactions =
+virtual Microaction {
+    vuA_CFU0_PUSH_WEIGHTS_I,
+    vuA_CFU0_PUSH_WEIGHTS_X,
+    vuA_CFU0_PUSH_WEIGHTS_O,
+    vuA_CFU0_SET_CODEBOOK_2B_I,
+    vuA_CFU0_SET_CODEBOOK_2B_X,
+    vuA_CFU0_SET_CODEBOOK_2B_O,
+    vuA_CFU0_SET_CODEBOOK_4B_I,
+    vuA_CFU0_SET_CODEBOOK_4B_X,
+    vuA_CFU0_SET_CODEBOOK_4B_O,
+    vuA_CFU0_SET_CODEBOOK_16B_I,
+    vuA_CFU0_SET_CODEBOOK_16B_X,
+    vuA_CFU0_SET_CODEBOOK_16B_O,
+    vuA_CFU0_ALU_MAC_I,
+    vuA_CFU0_ALU_MAC_X,
+    vuA_CFU0_ALU_MAC_O,
+    vuA_CFU0_ALU_RST_I,
+    vuA_CFU0_ALU_RST_X,
+    vuA_CFU0_ALU_RST_O,
+    vuA_CFU0_MAC_READ_I,
+    vuA_CFU0_MAC_READ_X,
+    vuA_CFU0_MAC_READ_O,
+    vuA_CFU0_MAC_READ_NO_RESET_I,
+    vuA_CFU0_MAC_READ_NO_RESET_X,
+    vuA_CFU0_MAC_READ_NO_RESET_O,
+    vuA_CFU0_DEBUG_DUMP_I,
+    vuA_CFU0_DEBUG_DUMP_X,
+    vuA_CFU0_DEBUG_DUMP_O
+
+}
+// Variant: V0
+Microaction {
+    uA_V0_CFU0_PUSH_WEIGHTS_I    (V0_CFU0_PUSH_WEIGHTS_I),
+    uA_V0_CFU0_PUSH_WEIGHTS_X    (V0_CFU0_PUSH_WEIGHTS_X),
+    uA_V0_CFU0_PUSH_WEIGHTS_O    (V0_CFU0_PUSH_WEIGHTS_O -> Xd),
+    uA_V0_CFU0_SET_CODEBOOK_2B_I    (V0_CFU0_SET_CODEBOOK_2B_I),
+    uA_V0_CFU0_SET_CODEBOOK_2B_X    (V0_CFU0_SET_CODEBOOK_2B_X),
+    uA_V0_CFU0_SET_CODEBOOK_2B_O    (V0_CFU0_SET_CODEBOOK_2B_O -> Xd),
+    uA_V0_CFU0_SET_CODEBOOK_4B_I    (V0_CFU0_SET_CODEBOOK_4B_I),
+    uA_V0_CFU0_SET_CODEBOOK_4B_X    (V0_CFU0_SET_CODEBOOK_4B_X),
+    uA_V0_CFU0_SET_CODEBOOK_4B_O    (V0_CFU0_SET_CODEBOOK_4B_O -> Xd),
+    uA_V0_CFU0_SET_CODEBOOK_16B_I    (V0_CFU0_SET_CODEBOOK_16B_I),
+    uA_V0_CFU0_SET_CODEBOOK_16B_X    (V0_CFU0_SET_CODEBOOK_16B_X),
+    uA_V0_CFU0_SET_CODEBOOK_16B_O    (V0_CFU0_SET_CODEBOOK_16B_O -> Xd),
+    uA_V0_CFU0_ALU_MAC_I    (V0_CFU0_ALU_MAC_I),
+    uA_V0_CFU0_ALU_MAC_X    (V0_CFU0_ALU_MAC_X),
+    uA_V0_CFU0_ALU_MAC_O    (V0_CFU0_ALU_MAC_O -> Xd),
+    uA_V0_CFU0_ALU_RST_I    (V0_CFU0_ALU_RST_I),
+    uA_V0_CFU0_ALU_RST_X    (V0_CFU0_ALU_RST_X),
+    uA_V0_CFU0_ALU_RST_O    (V0_CFU0_ALU_RST_O -> Xd),
+    uA_V0_CFU0_MAC_READ_I    (V0_CFU0_MAC_READ_I),
+    uA_V0_CFU0_MAC_READ_X    (V0_CFU0_MAC_READ_X),
+    uA_V0_CFU0_MAC_READ_O    (V0_CFU0_MAC_READ_O -> Xd),
+    uA_V0_CFU0_MAC_READ_NO_RESET_I    (V0_CFU0_MAC_READ_NO_RESET_I),
+    uA_V0_CFU0_MAC_READ_NO_RESET_X    (V0_CFU0_MAC_READ_NO_RESET_X),
+    uA_V0_CFU0_MAC_READ_NO_RESET_O    (V0_CFU0_MAC_READ_NO_RESET_O -> Xd),
+    uA_V0_CFU0_DEBUG_DUMP_I    (V0_CFU0_DEBUG_DUMP_I),
+    uA_V0_CFU0_DEBUG_DUMP_X    (V0_CFU0_DEBUG_DUMP_X),
+    uA_V0_CFU0_DEBUG_DUMP_O    (V0_CFU0_DEBUG_DUMP_O -> Xd)
+
+}
+// Variant: V1
+Microaction {
+    uA_V1_CFU0_PUSH_WEIGHTS_I    (V1_CFU0_PUSH_WEIGHTS_I),
+    uA_V1_CFU0_PUSH_WEIGHTS_X    (V1_CFU0_PUSH_WEIGHTS_X),
+    uA_V1_CFU0_PUSH_WEIGHTS_O    (V1_CFU0_PUSH_WEIGHTS_O -> Xd),
+    uA_V1_CFU0_SET_CODEBOOK_2B_I    (V1_CFU0_SET_CODEBOOK_2B_I),
+    uA_V1_CFU0_SET_CODEBOOK_2B_X    (V1_CFU0_SET_CODEBOOK_2B_X),
+    uA_V1_CFU0_SET_CODEBOOK_2B_O    (V1_CFU0_SET_CODEBOOK_2B_O -> Xd),
+    uA_V1_CFU0_SET_CODEBOOK_4B_I    (V1_CFU0_SET_CODEBOOK_4B_I),
+    uA_V1_CFU0_SET_CODEBOOK_4B_X    (V1_CFU0_SET_CODEBOOK_4B_X),
+    uA_V1_CFU0_SET_CODEBOOK_4B_O    (V1_CFU0_SET_CODEBOOK_4B_O -> Xd),
+    uA_V1_CFU0_SET_CODEBOOK_16B_I    (V1_CFU0_SET_CODEBOOK_16B_I),
+    uA_V1_CFU0_SET_CODEBOOK_16B_X    (V1_CFU0_SET_CODEBOOK_16B_X),
+    uA_V1_CFU0_SET_CODEBOOK_16B_O    (V1_CFU0_SET_CODEBOOK_16B_O -> Xd),
+    uA_V1_CFU0_ALU_MAC_I    (V1_CFU0_ALU_MAC_I),
+    uA_V1_CFU0_ALU_MAC_X    (V1_CFU0_ALU_MAC_X),
+    uA_V1_CFU0_ALU_MAC_O    (V1_CFU0_ALU_MAC_O -> Xd),
+    uA_V1_CFU0_ALU_RST_I    (V1_CFU0_ALU_RST_I),
+    uA_V1_CFU0_ALU_RST_X    (V1_CFU0_ALU_RST_X),
+    uA_V1_CFU0_ALU_RST_O    (V1_CFU0_ALU_RST_O -> Xd),
+    uA_V1_CFU0_MAC_READ_I    (V1_CFU0_MAC_READ_I),
+    uA_V1_CFU0_MAC_READ_X    (V1_CFU0_MAC_READ_X),
+    uA_V1_CFU0_MAC_READ_O    (V1_CFU0_MAC_READ_O -> Xd),
+    uA_V1_CFU0_MAC_READ_NO_RESET_I    (V1_CFU0_MAC_READ_NO_RESET_I),
+    uA_V1_CFU0_MAC_READ_NO_RESET_X    (V1_CFU0_MAC_READ_NO_RESET_X),
+    uA_V1_CFU0_MAC_READ_NO_RESET_O    (V1_CFU0_MAC_READ_NO_RESET_O -> Xd),
+    uA_V1_CFU0_DEBUG_DUMP_I    (V1_CFU0_DEBUG_DUMP_I),
+    uA_V1_CFU0_DEBUG_DUMP_X    (V1_CFU0_DEBUG_DUMP_X),
+    uA_V1_CFU0_DEBUG_DUMP_O    (V1_CFU0_DEBUG_DUMP_O -> Xd)
+
+}
+// Variant: V2
+Microaction {
+    uA_V2_CFU0_PUSH_WEIGHTS_I    (V2_CFU0_PUSH_WEIGHTS_I),
+    uA_V2_CFU0_PUSH_WEIGHTS_X    (V2_CFU0_PUSH_WEIGHTS_X),
+    uA_V2_CFU0_PUSH_WEIGHTS_O    (V2_CFU0_PUSH_WEIGHTS_O -> Xd),
+    uA_V2_CFU0_SET_CODEBOOK_2B_I    (V2_CFU0_SET_CODEBOOK_2B_I),
+    uA_V2_CFU0_SET_CODEBOOK_2B_X    (V2_CFU0_SET_CODEBOOK_2B_X),
+    uA_V2_CFU0_SET_CODEBOOK_2B_O    (V2_CFU0_SET_CODEBOOK_2B_O -> Xd),
+    uA_V2_CFU0_SET_CODEBOOK_4B_I    (V2_CFU0_SET_CODEBOOK_4B_I),
+    uA_V2_CFU0_SET_CODEBOOK_4B_X    (V2_CFU0_SET_CODEBOOK_4B_X),
+    uA_V2_CFU0_SET_CODEBOOK_4B_O    (V2_CFU0_SET_CODEBOOK_4B_O -> Xd),
+    uA_V2_CFU0_SET_CODEBOOK_16B_I    (V2_CFU0_SET_CODEBOOK_16B_I),
+    uA_V2_CFU0_SET_CODEBOOK_16B_X    (V2_CFU0_SET_CODEBOOK_16B_X),
+    uA_V2_CFU0_SET_CODEBOOK_16B_O    (V2_CFU0_SET_CODEBOOK_16B_O -> Xd),
+    uA_V2_CFU0_ALU_MAC_I    (V2_CFU0_ALU_MAC_I),
+    uA_V2_CFU0_ALU_MAC_X    (V2_CFU0_ALU_MAC_X),
+    uA_V2_CFU0_ALU_MAC_O    (V2_CFU0_ALU_MAC_O -> Xd),
+    uA_V2_CFU0_ALU_RST_I    (V2_CFU0_ALU_RST_I),
+    uA_V2_CFU0_ALU_RST_X    (V2_CFU0_ALU_RST_X),
+    uA_V2_CFU0_ALU_RST_O    (V2_CFU0_ALU_RST_O -> Xd),
+    uA_V2_CFU0_MAC_READ_I    (V2_CFU0_MAC_READ_I),
+    uA_V2_CFU0_MAC_READ_X    (V2_CFU0_MAC_READ_X),
+    uA_V2_CFU0_MAC_READ_O    (V2_CFU0_MAC_READ_O -> Xd),
+    uA_V2_CFU0_MAC_READ_NO_RESET_I    (V2_CFU0_MAC_READ_NO_RESET_I),
+    uA_V2_CFU0_MAC_READ_NO_RESET_X    (V2_CFU0_MAC_READ_NO_RESET_X),
+    uA_V2_CFU0_MAC_READ_NO_RESET_O    (V2_CFU0_MAC_READ_NO_RESET_O -> Xd),
+    uA_V2_CFU0_DEBUG_DUMP_I    (V2_CFU0_DEBUG_DUMP_I),
+    uA_V2_CFU0_DEBUG_DUMP_X    (V2_CFU0_DEBUG_DUMP_X),
+    uA_V2_CFU0_DEBUG_DUMP_O    (V2_CFU0_DEBUG_DUMP_O -> Xd)
+
+}
+// -----------------------
+
+/************************************ Stages & Pipeline ************************************/
+
+Stage {
+    EX_substage_CFU0_PUSH_WEIGHTS_I  (vuA_CFU0_PUSH_WEIGHTS_I),
+    EX_substage_CFU0_PUSH_WEIGHTS_X  (vuA_CFU0_PUSH_WEIGHTS_X),
+    EX_substage_CFU0_PUSH_WEIGHTS_O  (vuA_CFU0_PUSH_WEIGHTS_O),
+    EX_substage_CFU0_SET_CODEBOOK_2B_I  (vuA_CFU0_SET_CODEBOOK_2B_I),
+    EX_substage_CFU0_SET_CODEBOOK_2B_X  (vuA_CFU0_SET_CODEBOOK_2B_X),
+    EX_substage_CFU0_SET_CODEBOOK_2B_O  (vuA_CFU0_SET_CODEBOOK_2B_O),
+    EX_substage_CFU0_SET_CODEBOOK_4B_I  (vuA_CFU0_SET_CODEBOOK_4B_I),
+    EX_substage_CFU0_SET_CODEBOOK_4B_X  (vuA_CFU0_SET_CODEBOOK_4B_X),
+    EX_substage_CFU0_SET_CODEBOOK_4B_O  (vuA_CFU0_SET_CODEBOOK_4B_O),
+    EX_substage_CFU0_SET_CODEBOOK_16B_I  (vuA_CFU0_SET_CODEBOOK_16B_I),
+    EX_substage_CFU0_SET_CODEBOOK_16B_X  (vuA_CFU0_SET_CODEBOOK_16B_X),
+    EX_substage_CFU0_SET_CODEBOOK_16B_O  (vuA_CFU0_SET_CODEBOOK_16B_O),
+    EX_substage_CFU0_ALU_MAC_I  (vuA_CFU0_ALU_MAC_I),
+    EX_substage_CFU0_ALU_MAC_X  (vuA_CFU0_ALU_MAC_X),
+    EX_substage_CFU0_ALU_MAC_O  (vuA_CFU0_ALU_MAC_O),
+    EX_substage_CFU0_ALU_RST_I  (vuA_CFU0_ALU_RST_I),
+    EX_substage_CFU0_ALU_RST_X  (vuA_CFU0_ALU_RST_X),
+    EX_substage_CFU0_ALU_RST_O  (vuA_CFU0_ALU_RST_O),
+    EX_substage_CFU0_MAC_READ_I  (vuA_CFU0_MAC_READ_I),
+    EX_substage_CFU0_MAC_READ_X  (vuA_CFU0_MAC_READ_X),
+    EX_substage_CFU0_MAC_READ_O  (vuA_CFU0_MAC_READ_O),
+    EX_substage_CFU0_MAC_READ_NO_RESET_I  (vuA_CFU0_MAC_READ_NO_RESET_I),
+    EX_substage_CFU0_MAC_READ_NO_RESET_X  (vuA_CFU0_MAC_READ_NO_RESET_X),
+    EX_substage_CFU0_MAC_READ_NO_RESET_O  (vuA_CFU0_MAC_READ_NO_RESET_O),
+    EX_substage_CFU0_DEBUG_DUMP_I  (vuA_CFU0_DEBUG_DUMP_I),
+    EX_substage_CFU0_DEBUG_DUMP_X  (vuA_CFU0_DEBUG_DUMP_X),
+    EX_substage_CFU0_DEBUG_DUMP_O  (vuA_CFU0_DEBUG_DUMP_O)
+}
+
+Pipeline {
+    EX_subpipe_CFU0_PUSH_WEIGHTS (EX_substage_CFU0_PUSH_WEIGHTS_I -> EX_substage_CFU0_PUSH_WEIGHTS_X -> EX_substage_CFU0_PUSH_WEIGHTS_O),
+    EX_subpipe_CFU0_SET_CODEBOOK_2B (EX_substage_CFU0_SET_CODEBOOK_2B_I -> EX_substage_CFU0_SET_CODEBOOK_2B_X -> EX_substage_CFU0_SET_CODEBOOK_2B_O),
+    EX_subpipe_CFU0_SET_CODEBOOK_4B (EX_substage_CFU0_SET_CODEBOOK_4B_I -> EX_substage_CFU0_SET_CODEBOOK_4B_X -> EX_substage_CFU0_SET_CODEBOOK_4B_O),
+    EX_subpipe_CFU0_SET_CODEBOOK_16B (EX_substage_CFU0_SET_CODEBOOK_16B_I -> EX_substage_CFU0_SET_CODEBOOK_16B_X -> EX_substage_CFU0_SET_CODEBOOK_16B_O),
+    EX_subpipe_CFU0_ALU_MAC (EX_substage_CFU0_ALU_MAC_I -> EX_substage_CFU0_ALU_MAC_X -> EX_substage_CFU0_ALU_MAC_O),
+    EX_subpipe_CFU0_ALU_RST (EX_substage_CFU0_ALU_RST_I -> EX_substage_CFU0_ALU_RST_X -> EX_substage_CFU0_ALU_RST_O),
+    EX_subpipe_CFU0_MAC_READ (EX_substage_CFU0_MAC_READ_I -> EX_substage_CFU0_MAC_READ_X -> EX_substage_CFU0_MAC_READ_O),
+    EX_subpipe_CFU0_MAC_READ_NO_RESET (EX_substage_CFU0_MAC_READ_NO_RESET_I -> EX_substage_CFU0_MAC_READ_NO_RESET_X -> EX_substage_CFU0_MAC_READ_NO_RESET_O),
+    EX_subpipe_CFU0_DEBUG_DUMP (EX_substage_CFU0_DEBUG_DUMP_I -> EX_substage_CFU0_DEBUG_DUMP_X -> EX_substage_CFU0_DEBUG_DUMP_O)
+}
+
+
+Stage {
+  IF_stage (uA_IFetch, uA_PCGen),
+  ID_stage (uA_Decode, uA_JumpDecode, uA_JumpDecodeReg, uA_OF_A, uA_OF_B),
+  EX_stage (
+    uA_ALU_RegUpdate,
+    uA_ALU_Branch,
+    uA_CSR,
+    uA_LSU,
+    uA_MUL,
+    uA_MULH,
+    // = XISAAC EX stage =
+    EX_subpipe_CFU0_PUSH_WEIGHTS,
+    EX_subpipe_CFU0_SET_CODEBOOK_2B,
+    EX_subpipe_CFU0_SET_CODEBOOK_4B,
+    EX_subpipe_CFU0_SET_CODEBOOK_16B,
+    EX_subpipe_CFU0_ALU_MAC,
+    EX_subpipe_CFU0_ALU_RST,
+    EX_subpipe_CFU0_MAC_READ,
+    EX_subpipe_CFU0_MAC_READ_NO_RESET,
+    EX_subpipe_CFU0_DEBUG_DUMP,
+
+    // -------------------
+    uA_DIV,
+    uA_DIVU
+),
+  WB_stage (uA_Memory_R, uA_Memory_W)
+}
+
+Pipeline CV32E40PXISAAC_pipeline (IF_stage -> ID_stage -> EX_stage -> WB_stage)
+
+/************************************* External Models *************************************/
+TraceValue {rs1, rs2, rd, pc, brTarget, rs2_data}
+// = XISAAC Trace Values =
+TraceValue {
+  rs1_data,
+  rd_data
+}
+
+// -------------------
+
+ConnectorModel regModel (
+  link : "models/common/StandardRegisterModel.h"
+  trace : {rs1, rs2, rd}
+  connectorIn : Xd
+  connectorOut : {Xa, Xb}
+)
+
+ConnectorModel staBranchPredModel (
+  link : "models/common/StaticBranchPredictModel.h"
+  trace : {pc, brTarget}
+  connectorIn : {Pc_np, Pc_p}
+  connectorOut : Pc
+)
+
+ResourceModel divider (
+  link: "models/cv32e40p/DividerModel.h"
+  trace: rs2_data
+)
+
+ResourceModel divider_u (
+  link: "models/cv32e40p/DividerUnsignedModel.h"
+  trace: rs2_data
+)
+
+/*********************************** Instruction Section ***********************************/
+InstrGroup {
+  Arith_Ra_Rb (add, sub, xor, or, and, slt, sltu, sll, srl, sra),
+  Arith_Ra (addi, xori, ori, andi, slti, sltiu, slli, srli, srai),
+  Arith_X (auipc, lui),
+  Mul_Ra_Rb (mul),
+  MulH_Ra_Rb (mulh, mulhu, mulhsu),
+  Div_Ra_Rb (div, rem),
+  DivU_Ra_Rb (divu, remu),
+  Csr_Ra (csrrw, csrrs, csrrc),
+  Csr_X (csrrwi, csrrsi, csrrci),
+  Store (sb, sh, sw),
+  Load (lw, lh, lhu, lb, lbu),
+  Branch_Ra_Rb (beq, bne, blt, bge, bltu, bgeu),
+  Default ([?])
+}
+
+// = XISAAC Instr Groups =
+InstrGroup {
+  
+  
+  XIsaac_CFU0_PUSH_WEIGHTS (cfu0_push_weights),  
+  
+  XIsaac_CFU0_SET_CODEBOOK_2B (cfu0_set_codebook_2b),  
+  
+  XIsaac_CFU0_SET_CODEBOOK_4B (cfu0_set_codebook_4b),  
+  
+  XIsaac_CFU0_SET_CODEBOOK_16B (cfu0_set_codebook_16b),  
+  
+  XIsaac_CFU0_ALU_MAC (cfu0_alu_mac),  
+  
+  XIsaac_CFU0_ALU_RST (cfu0_alu_rst),  
+  
+  XIsaac_CFU0_MAC_READ (cfu0_mac_read),  
+  
+  XIsaac_CFU0_MAC_READ_NO_RESET (cfu0_mac_read_no_reset),  
+  
+  XIsaac_CFU0_DEBUG_DUMP (cfu0_debug_dump)
+}
+// -----------------------
+
+MicroactionMapping {
+  [ALL] :        {uA_IFetch, uA_PCGen},
+  Arith_Ra_Rb :  {uA_Decode, uA_OF_A, uA_OF_B, uA_ALU_RegUpdate},
+  Arith_Ra :     {uA_Decode, uA_OF_A, uA_ALU_RegUpdate},
+  Arith_X :      {uA_Decode, uA_ALU_RegUpdate},
+  Mul_Ra_Rb :    {uA_Decode, uA_OF_A, uA_OF_B, uA_MUL},
+  MulH_Ra_Rb :   {uA_Decode, uA_OF_A, uA_OF_B, uA_MULH},
+  Div_Ra_Rb :    {uA_Decode, uA_OF_A, uA_OF_B, uA_DIV},
+  DivU_Ra_Rb :   {uA_Decode, uA_OF_A, uA_OF_B, uA_DIVU},
+  Csr_Ra :       {uA_Decode, uA_OF_A, uA_CSR},
+  Csr_X :        {uA_Decode, uA_CSR},
+  Store :        {uA_Decode, uA_OF_A, uA_OF_B, uA_LSU, uA_Memory_W},
+  Load :         {uA_Decode, uA_OF_A, uA_LSU, uA_Memory_R},
+  Branch_Ra_Rb : {uA_Decode, uA_OF_A, uA_OF_B, uA_ALU_Branch},
+  jal :          {uA_JumpDecode, uA_ALU_RegUpdate},
+  jalr :         {uA_JumpDecodeReg, uA_ALU_RegUpdate}
+}
+
+// = XISAAC Microaction Mapping =
+MicroactionMapping {
+
+  XIsaac_CFU0_PUSH_WEIGHTS : {uA_Decode, uA_OF_A, uA_OF_B, vuA_CFU0_PUSH_WEIGHTS_I, vuA_CFU0_PUSH_WEIGHTS_X, vuA_CFU0_PUSH_WEIGHTS_O},
+
+  XIsaac_CFU0_SET_CODEBOOK_2B : {uA_Decode, uA_OF_A, uA_OF_B, vuA_CFU0_SET_CODEBOOK_2B_I, vuA_CFU0_SET_CODEBOOK_2B_X, vuA_CFU0_SET_CODEBOOK_2B_O},
+
+  XIsaac_CFU0_SET_CODEBOOK_4B : {uA_Decode, uA_OF_A, uA_OF_B, vuA_CFU0_SET_CODEBOOK_4B_I, vuA_CFU0_SET_CODEBOOK_4B_X, vuA_CFU0_SET_CODEBOOK_4B_O},
+
+  XIsaac_CFU0_SET_CODEBOOK_16B : {uA_Decode, uA_OF_A, uA_OF_B, vuA_CFU0_SET_CODEBOOK_16B_I, vuA_CFU0_SET_CODEBOOK_16B_X, vuA_CFU0_SET_CODEBOOK_16B_O},
+
+  XIsaac_CFU0_ALU_MAC : {uA_Decode, uA_OF_A, uA_OF_B, vuA_CFU0_ALU_MAC_I, vuA_CFU0_ALU_MAC_X, vuA_CFU0_ALU_MAC_O},
+
+  XIsaac_CFU0_ALU_RST : {uA_Decode, uA_OF_A, uA_OF_B, vuA_CFU0_ALU_RST_I, vuA_CFU0_ALU_RST_X, vuA_CFU0_ALU_RST_O},
+
+  XIsaac_CFU0_MAC_READ : {uA_Decode, uA_OF_A, uA_OF_B, vuA_CFU0_MAC_READ_I, vuA_CFU0_MAC_READ_X, vuA_CFU0_MAC_READ_O},
+
+  XIsaac_CFU0_MAC_READ_NO_RESET : {uA_Decode, uA_OF_A, uA_OF_B, vuA_CFU0_MAC_READ_NO_RESET_I, vuA_CFU0_MAC_READ_NO_RESET_X, vuA_CFU0_MAC_READ_NO_RESET_O},
+
+  XIsaac_CFU0_DEBUG_DUMP : {uA_Decode, uA_OF_A, uA_OF_B, vuA_CFU0_DEBUG_DUMP_I, vuA_CFU0_DEBUG_DUMP_X, vuA_CFU0_DEBUG_DUMP_O}
+
+}
+// ------------------------------
+
+
+TraceValueMapping {
+  [ALL] : {
+      pc = "$resolved{$pc}"
+  },
+  Arith_Ra_Rb : {
+    rs1 = "$bitfield{rs1}",
+    rs2 = "$bitfield{rs2}",
+    rd  = "$bitfield{rd}"
+  },
+  Arith_Ra : {
+    rs1 = "$bitfield{rs1}",
+    rd  = "$bitfield{rd}"
+  },
+  Arith_X : {
+    rd  = "$bitfield{rd}"
+  },
+  Mul_Ra_Rb : {
+    rs1 = "$bitfield{rs1}",
+    rs2 = "$bitfield{rs2}",
+    rd  = "$bitfield{rd}"
+  },
+  MulH_Ra_Rb : {
+    rs1 = "$bitfield{rs1}",
+    rs2 = "$bitfield{rs2}",
+    rd  = "$bitfield{rd}"
+  },
+  // = XISAAC Trace Value Mapping =
+  XIsaac_CFU0_PUSH_WEIGHTS : {     
+    rd = "$bitfield{rd}",
+    rd_data = "$reg{$bitfield{rd}}",
+    
+    rs1 = "$bitfield{rs1}",
+    rs1_data = "$reg{$bitfield{rs1}}",
+    
+    rs2 = "$bitfield{rs2}",
+    rs2_data = "$reg{$bitfield{rs2}}"
+  },
+  XIsaac_CFU0_SET_CODEBOOK_2B : {     
+    rd = "$bitfield{rd}",
+    rd_data = "$reg{$bitfield{rd}}",
+    
+    rs1 = "$bitfield{rs1}",
+    rs1_data = "$reg{$bitfield{rs1}}",
+    
+    rs2 = "$bitfield{rs2}",
+    rs2_data = "$reg{$bitfield{rs2}}"
+  },
+  XIsaac_CFU0_SET_CODEBOOK_4B : {     
+    rd = "$bitfield{rd}",
+    rd_data = "$reg{$bitfield{rd}}",
+    
+    rs1 = "$bitfield{rs1}",
+    rs1_data = "$reg{$bitfield{rs1}}",
+    
+    rs2 = "$bitfield{rs2}",
+    rs2_data = "$reg{$bitfield{rs2}}"
+  },
+  XIsaac_CFU0_SET_CODEBOOK_16B : {     
+    rd = "$bitfield{rd}",
+    rd_data = "$reg{$bitfield{rd}}",
+    
+    rs1 = "$bitfield{rs1}",
+    rs1_data = "$reg{$bitfield{rs1}}",
+    
+    rs2 = "$bitfield{rs2}",
+    rs2_data = "$reg{$bitfield{rs2}}"
+  },
+  XIsaac_CFU0_ALU_MAC : {     
+    rd = "$bitfield{rd}",
+    rd_data = "$reg{$bitfield{rd}}",
+    
+    rs1 = "$bitfield{rs1}",
+    rs1_data = "$reg{$bitfield{rs1}}",
+    
+    rs2 = "$bitfield{rs2}",
+    rs2_data = "$reg{$bitfield{rs2}}"
+  },
+  XIsaac_CFU0_ALU_RST : {     
+    rd = "$bitfield{rd}",
+    rd_data = "$reg{$bitfield{rd}}",
+    
+    rs1 = "$bitfield{rs1}",
+    rs1_data = "$reg{$bitfield{rs1}}",
+    
+    rs2 = "$bitfield{rs2}",
+    rs2_data = "$reg{$bitfield{rs2}}"
+  },
+  XIsaac_CFU0_MAC_READ : {     
+    rd = "$bitfield{rd}",
+    rd_data = "$reg{$bitfield{rd}}",
+    
+    rs1 = "$bitfield{rs1}",
+    rs1_data = "$reg{$bitfield{rs1}}",
+    
+    rs2 = "$bitfield{rs2}",
+    rs2_data = "$reg{$bitfield{rs2}}"
+  },
+  XIsaac_CFU0_MAC_READ_NO_RESET : {     
+    rd = "$bitfield{rd}",
+    rd_data = "$reg{$bitfield{rd}}",
+    
+    rs1 = "$bitfield{rs1}",
+    rs1_data = "$reg{$bitfield{rs1}}",
+    
+    rs2 = "$bitfield{rs2}",
+    rs2_data = "$reg{$bitfield{rs2}}"
+  },
+  XIsaac_CFU0_DEBUG_DUMP : {     
+    rd = "$bitfield{rd}",
+    rd_data = "$reg{$bitfield{rd}}",
+    
+    rs1 = "$bitfield{rs1}",
+    rs1_data = "$reg{$bitfield{rs1}}",
+    
+    rs2 = "$bitfield{rs2}",
+    rs2_data = "$reg{$bitfield{rs2}}"
+  },
+
+  // ------------------------------
+  Div_Ra_Rb : {
+    rs1 = "$bitfield{rs1}",
+    rs2 = "$bitfield{rs2}",
+    rd  = "$bitfield{rd}",
+    rs2_data = "$reg{$bitfield{rs2}}"
+  },
+  DivU_Ra_Rb : {
+    rs1 = "$bitfield{rs1}",
+    rs2 = "$bitfield{rs2}",
+    rd  = "$bitfield{rd}",
+    rs2_data = "$reg{$bitfield{rs2}}"
+  },
+  Csr_Ra : {
+    rs1 = "$bitfield{rs1}",
+    rd  = "$bitfield{rd}"
+  },
+  Csr_X : {
+    rd  = "$bitfield{rd}"
+  },
+  Store : {
+    rs1 = "$bitfield{rs1}",
+    rs2 = "$bitfield{rs2}"
+  },
+  Load : {
+    rs1 = "$bitfield{rs1}",
+    rd  = "$bitfield{rd}"
+  },
+  Branch_Ra_Rb : {
+    rs1 = "$bitfield{rs1}",
+    rs2 = "$bitfield{rs2}",
+    brTarget = "$resolved{$pc + (((int16_t)($bitfield{imm} << 3)) >> 3)}"
+  },
+  jal : {
+    rd = "$bitfield{rd}",
+    brTarget = "$resolved{$pc + (((int32_t)($bitfield{imm} << 11)) >> 11)}"
+  },
+  jalr : {
+    rs1 = "$bitfield{rs1}",
+    rd  = "$bitfield{rd}",
+    brTarget = "($reg{$bitfield{rs1}} + $resolved{(((int16_t)($bitfield{imm} << 4)) >> 4)}) & -2U"
+  }
+}
+
+/**************************************** Variants *****************************************/
+// Variant: V0
+
+CorePerfModel CV32E40PXISAACV0 (
+  core : "XIsaacCore"
+  use Pipeline : CV32E40PXISAAC_pipeline
+  use ConnectorModel : {regModel, staBranchPredModel}
+  assign Resource : {
+    vCFU0_PUSH_WEIGHTS_I = V0_CFU0_PUSH_WEIGHTS_I,
+    vCFU0_PUSH_WEIGHTS_X = V0_CFU0_PUSH_WEIGHTS_X,
+    vCFU0_PUSH_WEIGHTS_O = V0_CFU0_PUSH_WEIGHTS_O,
+    vCFU0_SET_CODEBOOK_2B_I = V0_CFU0_SET_CODEBOOK_2B_I,
+    vCFU0_SET_CODEBOOK_2B_X = V0_CFU0_SET_CODEBOOK_2B_X,
+    vCFU0_SET_CODEBOOK_2B_O = V0_CFU0_SET_CODEBOOK_2B_O,
+    vCFU0_SET_CODEBOOK_4B_I = V0_CFU0_SET_CODEBOOK_4B_I,
+    vCFU0_SET_CODEBOOK_4B_X = V0_CFU0_SET_CODEBOOK_4B_X,
+    vCFU0_SET_CODEBOOK_4B_O = V0_CFU0_SET_CODEBOOK_4B_O,
+    vCFU0_SET_CODEBOOK_16B_I = V0_CFU0_SET_CODEBOOK_16B_I,
+    vCFU0_SET_CODEBOOK_16B_X = V0_CFU0_SET_CODEBOOK_16B_X,
+    vCFU0_SET_CODEBOOK_16B_O = V0_CFU0_SET_CODEBOOK_16B_O,
+    vCFU0_ALU_MAC_I = V0_CFU0_ALU_MAC_I,
+    vCFU0_ALU_MAC_X = V0_CFU0_ALU_MAC_X,
+    vCFU0_ALU_MAC_O = V0_CFU0_ALU_MAC_O,
+    vCFU0_ALU_RST_I = V0_CFU0_ALU_RST_I,
+    vCFU0_ALU_RST_X = V0_CFU0_ALU_RST_X,
+    vCFU0_ALU_RST_O = V0_CFU0_ALU_RST_O,
+    vCFU0_MAC_READ_I = V0_CFU0_MAC_READ_I,
+    vCFU0_MAC_READ_X = V0_CFU0_MAC_READ_X,
+    vCFU0_MAC_READ_O = V0_CFU0_MAC_READ_O,
+    vCFU0_MAC_READ_NO_RESET_I = V0_CFU0_MAC_READ_NO_RESET_I,
+    vCFU0_MAC_READ_NO_RESET_X = V0_CFU0_MAC_READ_NO_RESET_X,
+    vCFU0_MAC_READ_NO_RESET_O = V0_CFU0_MAC_READ_NO_RESET_O,
+    vCFU0_DEBUG_DUMP_I = V0_CFU0_DEBUG_DUMP_I,
+    vCFU0_DEBUG_DUMP_X = V0_CFU0_DEBUG_DUMP_X,
+    vCFU0_DEBUG_DUMP_O = V0_CFU0_DEBUG_DUMP_O
+  }
+  assign Microaction : {
+    vuA_CFU0_PUSH_WEIGHTS_I = uA_V0_CFU0_PUSH_WEIGHTS_I,
+    vuA_CFU0_PUSH_WEIGHTS_X = uA_V0_CFU0_PUSH_WEIGHTS_X,
+    vuA_CFU0_PUSH_WEIGHTS_O = uA_V0_CFU0_PUSH_WEIGHTS_O,
+    vuA_CFU0_SET_CODEBOOK_2B_I = uA_V0_CFU0_SET_CODEBOOK_2B_I,
+    vuA_CFU0_SET_CODEBOOK_2B_X = uA_V0_CFU0_SET_CODEBOOK_2B_X,
+    vuA_CFU0_SET_CODEBOOK_2B_O = uA_V0_CFU0_SET_CODEBOOK_2B_O,
+    vuA_CFU0_SET_CODEBOOK_4B_I = uA_V0_CFU0_SET_CODEBOOK_4B_I,
+    vuA_CFU0_SET_CODEBOOK_4B_X = uA_V0_CFU0_SET_CODEBOOK_4B_X,
+    vuA_CFU0_SET_CODEBOOK_4B_O = uA_V0_CFU0_SET_CODEBOOK_4B_O,
+    vuA_CFU0_SET_CODEBOOK_16B_I = uA_V0_CFU0_SET_CODEBOOK_16B_I,
+    vuA_CFU0_SET_CODEBOOK_16B_X = uA_V0_CFU0_SET_CODEBOOK_16B_X,
+    vuA_CFU0_SET_CODEBOOK_16B_O = uA_V0_CFU0_SET_CODEBOOK_16B_O,
+    vuA_CFU0_ALU_MAC_I = uA_V0_CFU0_ALU_MAC_I,
+    vuA_CFU0_ALU_MAC_X = uA_V0_CFU0_ALU_MAC_X,
+    vuA_CFU0_ALU_MAC_O = uA_V0_CFU0_ALU_MAC_O,
+    vuA_CFU0_ALU_RST_I = uA_V0_CFU0_ALU_RST_I,
+    vuA_CFU0_ALU_RST_X = uA_V0_CFU0_ALU_RST_X,
+    vuA_CFU0_ALU_RST_O = uA_V0_CFU0_ALU_RST_O,
+    vuA_CFU0_MAC_READ_I = uA_V0_CFU0_MAC_READ_I,
+    vuA_CFU0_MAC_READ_X = uA_V0_CFU0_MAC_READ_X,
+    vuA_CFU0_MAC_READ_O = uA_V0_CFU0_MAC_READ_O,
+    vuA_CFU0_MAC_READ_NO_RESET_I = uA_V0_CFU0_MAC_READ_NO_RESET_I,
+    vuA_CFU0_MAC_READ_NO_RESET_X = uA_V0_CFU0_MAC_READ_NO_RESET_X,
+    vuA_CFU0_MAC_READ_NO_RESET_O = uA_V0_CFU0_MAC_READ_NO_RESET_O,
+    vuA_CFU0_DEBUG_DUMP_I = uA_V0_CFU0_DEBUG_DUMP_I,
+    vuA_CFU0_DEBUG_DUMP_X = uA_V0_CFU0_DEBUG_DUMP_X,
+    vuA_CFU0_DEBUG_DUMP_O = uA_V0_CFU0_DEBUG_DUMP_O
+  }
+)
+
+// Variant: V1
+
+CorePerfModel CV32E40PXISAACV1 (
+  core : "XIsaacCore"
+  use Pipeline : CV32E40PXISAAC_pipeline
+  use ConnectorModel : {regModel, staBranchPredModel}
+  assign Resource : {
+    vCFU0_PUSH_WEIGHTS_I = V1_CFU0_PUSH_WEIGHTS_I,
+    vCFU0_PUSH_WEIGHTS_X = V1_CFU0_PUSH_WEIGHTS_X,
+    vCFU0_PUSH_WEIGHTS_O = V1_CFU0_PUSH_WEIGHTS_O,
+    vCFU0_SET_CODEBOOK_2B_I = V1_CFU0_SET_CODEBOOK_2B_I,
+    vCFU0_SET_CODEBOOK_2B_X = V1_CFU0_SET_CODEBOOK_2B_X,
+    vCFU0_SET_CODEBOOK_2B_O = V1_CFU0_SET_CODEBOOK_2B_O,
+    vCFU0_SET_CODEBOOK_4B_I = V1_CFU0_SET_CODEBOOK_4B_I,
+    vCFU0_SET_CODEBOOK_4B_X = V1_CFU0_SET_CODEBOOK_4B_X,
+    vCFU0_SET_CODEBOOK_4B_O = V1_CFU0_SET_CODEBOOK_4B_O,
+    vCFU0_SET_CODEBOOK_16B_I = V1_CFU0_SET_CODEBOOK_16B_I,
+    vCFU0_SET_CODEBOOK_16B_X = V1_CFU0_SET_CODEBOOK_16B_X,
+    vCFU0_SET_CODEBOOK_16B_O = V1_CFU0_SET_CODEBOOK_16B_O,
+    vCFU0_ALU_MAC_I = V1_CFU0_ALU_MAC_I,
+    vCFU0_ALU_MAC_X = V1_CFU0_ALU_MAC_X,
+    vCFU0_ALU_MAC_O = V1_CFU0_ALU_MAC_O,
+    vCFU0_ALU_RST_I = V1_CFU0_ALU_RST_I,
+    vCFU0_ALU_RST_X = V1_CFU0_ALU_RST_X,
+    vCFU0_ALU_RST_O = V1_CFU0_ALU_RST_O,
+    vCFU0_MAC_READ_I = V1_CFU0_MAC_READ_I,
+    vCFU0_MAC_READ_X = V1_CFU0_MAC_READ_X,
+    vCFU0_MAC_READ_O = V1_CFU0_MAC_READ_O,
+    vCFU0_MAC_READ_NO_RESET_I = V1_CFU0_MAC_READ_NO_RESET_I,
+    vCFU0_MAC_READ_NO_RESET_X = V1_CFU0_MAC_READ_NO_RESET_X,
+    vCFU0_MAC_READ_NO_RESET_O = V1_CFU0_MAC_READ_NO_RESET_O,
+    vCFU0_DEBUG_DUMP_I = V1_CFU0_DEBUG_DUMP_I,
+    vCFU0_DEBUG_DUMP_X = V1_CFU0_DEBUG_DUMP_X,
+    vCFU0_DEBUG_DUMP_O = V1_CFU0_DEBUG_DUMP_O
+  }
+  assign Microaction : {
+    vuA_CFU0_PUSH_WEIGHTS_I = uA_V1_CFU0_PUSH_WEIGHTS_I,
+    vuA_CFU0_PUSH_WEIGHTS_X = uA_V1_CFU0_PUSH_WEIGHTS_X,
+    vuA_CFU0_PUSH_WEIGHTS_O = uA_V1_CFU0_PUSH_WEIGHTS_O,
+    vuA_CFU0_SET_CODEBOOK_2B_I = uA_V1_CFU0_SET_CODEBOOK_2B_I,
+    vuA_CFU0_SET_CODEBOOK_2B_X = uA_V1_CFU0_SET_CODEBOOK_2B_X,
+    vuA_CFU0_SET_CODEBOOK_2B_O = uA_V1_CFU0_SET_CODEBOOK_2B_O,
+    vuA_CFU0_SET_CODEBOOK_4B_I = uA_V1_CFU0_SET_CODEBOOK_4B_I,
+    vuA_CFU0_SET_CODEBOOK_4B_X = uA_V1_CFU0_SET_CODEBOOK_4B_X,
+    vuA_CFU0_SET_CODEBOOK_4B_O = uA_V1_CFU0_SET_CODEBOOK_4B_O,
+    vuA_CFU0_SET_CODEBOOK_16B_I = uA_V1_CFU0_SET_CODEBOOK_16B_I,
+    vuA_CFU0_SET_CODEBOOK_16B_X = uA_V1_CFU0_SET_CODEBOOK_16B_X,
+    vuA_CFU0_SET_CODEBOOK_16B_O = uA_V1_CFU0_SET_CODEBOOK_16B_O,
+    vuA_CFU0_ALU_MAC_I = uA_V1_CFU0_ALU_MAC_I,
+    vuA_CFU0_ALU_MAC_X = uA_V1_CFU0_ALU_MAC_X,
+    vuA_CFU0_ALU_MAC_O = uA_V1_CFU0_ALU_MAC_O,
+    vuA_CFU0_ALU_RST_I = uA_V1_CFU0_ALU_RST_I,
+    vuA_CFU0_ALU_RST_X = uA_V1_CFU0_ALU_RST_X,
+    vuA_CFU0_ALU_RST_O = uA_V1_CFU0_ALU_RST_O,
+    vuA_CFU0_MAC_READ_I = uA_V1_CFU0_MAC_READ_I,
+    vuA_CFU0_MAC_READ_X = uA_V1_CFU0_MAC_READ_X,
+    vuA_CFU0_MAC_READ_O = uA_V1_CFU0_MAC_READ_O,
+    vuA_CFU0_MAC_READ_NO_RESET_I = uA_V1_CFU0_MAC_READ_NO_RESET_I,
+    vuA_CFU0_MAC_READ_NO_RESET_X = uA_V1_CFU0_MAC_READ_NO_RESET_X,
+    vuA_CFU0_MAC_READ_NO_RESET_O = uA_V1_CFU0_MAC_READ_NO_RESET_O,
+    vuA_CFU0_DEBUG_DUMP_I = uA_V1_CFU0_DEBUG_DUMP_I,
+    vuA_CFU0_DEBUG_DUMP_X = uA_V1_CFU0_DEBUG_DUMP_X,
+    vuA_CFU0_DEBUG_DUMP_O = uA_V1_CFU0_DEBUG_DUMP_O
+  }
+)
+
+// Variant: V2
+
+CorePerfModel CV32E40PXISAACV2 (
+  core : "XIsaacCore"
+  use Pipeline : CV32E40PXISAAC_pipeline
+  use ConnectorModel : {regModel, staBranchPredModel}
+  assign Resource : {
+    vCFU0_PUSH_WEIGHTS_I = V2_CFU0_PUSH_WEIGHTS_I,
+    vCFU0_PUSH_WEIGHTS_X = V2_CFU0_PUSH_WEIGHTS_X,
+    vCFU0_PUSH_WEIGHTS_O = V2_CFU0_PUSH_WEIGHTS_O,
+    vCFU0_SET_CODEBOOK_2B_I = V2_CFU0_SET_CODEBOOK_2B_I,
+    vCFU0_SET_CODEBOOK_2B_X = V2_CFU0_SET_CODEBOOK_2B_X,
+    vCFU0_SET_CODEBOOK_2B_O = V2_CFU0_SET_CODEBOOK_2B_O,
+    vCFU0_SET_CODEBOOK_4B_I = V2_CFU0_SET_CODEBOOK_4B_I,
+    vCFU0_SET_CODEBOOK_4B_X = V2_CFU0_SET_CODEBOOK_4B_X,
+    vCFU0_SET_CODEBOOK_4B_O = V2_CFU0_SET_CODEBOOK_4B_O,
+    vCFU0_SET_CODEBOOK_16B_I = V2_CFU0_SET_CODEBOOK_16B_I,
+    vCFU0_SET_CODEBOOK_16B_X = V2_CFU0_SET_CODEBOOK_16B_X,
+    vCFU0_SET_CODEBOOK_16B_O = V2_CFU0_SET_CODEBOOK_16B_O,
+    vCFU0_ALU_MAC_I = V2_CFU0_ALU_MAC_I,
+    vCFU0_ALU_MAC_X = V2_CFU0_ALU_MAC_X,
+    vCFU0_ALU_MAC_O = V2_CFU0_ALU_MAC_O,
+    vCFU0_ALU_RST_I = V2_CFU0_ALU_RST_I,
+    vCFU0_ALU_RST_X = V2_CFU0_ALU_RST_X,
+    vCFU0_ALU_RST_O = V2_CFU0_ALU_RST_O,
+    vCFU0_MAC_READ_I = V2_CFU0_MAC_READ_I,
+    vCFU0_MAC_READ_X = V2_CFU0_MAC_READ_X,
+    vCFU0_MAC_READ_O = V2_CFU0_MAC_READ_O,
+    vCFU0_MAC_READ_NO_RESET_I = V2_CFU0_MAC_READ_NO_RESET_I,
+    vCFU0_MAC_READ_NO_RESET_X = V2_CFU0_MAC_READ_NO_RESET_X,
+    vCFU0_MAC_READ_NO_RESET_O = V2_CFU0_MAC_READ_NO_RESET_O,
+    vCFU0_DEBUG_DUMP_I = V2_CFU0_DEBUG_DUMP_I,
+    vCFU0_DEBUG_DUMP_X = V2_CFU0_DEBUG_DUMP_X,
+    vCFU0_DEBUG_DUMP_O = V2_CFU0_DEBUG_DUMP_O
+  }
+  assign Microaction : {
+    vuA_CFU0_PUSH_WEIGHTS_I = uA_V2_CFU0_PUSH_WEIGHTS_I,
+    vuA_CFU0_PUSH_WEIGHTS_X = uA_V2_CFU0_PUSH_WEIGHTS_X,
+    vuA_CFU0_PUSH_WEIGHTS_O = uA_V2_CFU0_PUSH_WEIGHTS_O,
+    vuA_CFU0_SET_CODEBOOK_2B_I = uA_V2_CFU0_SET_CODEBOOK_2B_I,
+    vuA_CFU0_SET_CODEBOOK_2B_X = uA_V2_CFU0_SET_CODEBOOK_2B_X,
+    vuA_CFU0_SET_CODEBOOK_2B_O = uA_V2_CFU0_SET_CODEBOOK_2B_O,
+    vuA_CFU0_SET_CODEBOOK_4B_I = uA_V2_CFU0_SET_CODEBOOK_4B_I,
+    vuA_CFU0_SET_CODEBOOK_4B_X = uA_V2_CFU0_SET_CODEBOOK_4B_X,
+    vuA_CFU0_SET_CODEBOOK_4B_O = uA_V2_CFU0_SET_CODEBOOK_4B_O,
+    vuA_CFU0_SET_CODEBOOK_16B_I = uA_V2_CFU0_SET_CODEBOOK_16B_I,
+    vuA_CFU0_SET_CODEBOOK_16B_X = uA_V2_CFU0_SET_CODEBOOK_16B_X,
+    vuA_CFU0_SET_CODEBOOK_16B_O = uA_V2_CFU0_SET_CODEBOOK_16B_O,
+    vuA_CFU0_ALU_MAC_I = uA_V2_CFU0_ALU_MAC_I,
+    vuA_CFU0_ALU_MAC_X = uA_V2_CFU0_ALU_MAC_X,
+    vuA_CFU0_ALU_MAC_O = uA_V2_CFU0_ALU_MAC_O,
+    vuA_CFU0_ALU_RST_I = uA_V2_CFU0_ALU_RST_I,
+    vuA_CFU0_ALU_RST_X = uA_V2_CFU0_ALU_RST_X,
+    vuA_CFU0_ALU_RST_O = uA_V2_CFU0_ALU_RST_O,
+    vuA_CFU0_MAC_READ_I = uA_V2_CFU0_MAC_READ_I,
+    vuA_CFU0_MAC_READ_X = uA_V2_CFU0_MAC_READ_X,
+    vuA_CFU0_MAC_READ_O = uA_V2_CFU0_MAC_READ_O,
+    vuA_CFU0_MAC_READ_NO_RESET_I = uA_V2_CFU0_MAC_READ_NO_RESET_I,
+    vuA_CFU0_MAC_READ_NO_RESET_X = uA_V2_CFU0_MAC_READ_NO_RESET_X,
+    vuA_CFU0_MAC_READ_NO_RESET_O = uA_V2_CFU0_MAC_READ_NO_RESET_O,
+    vuA_CFU0_DEBUG_DUMP_I = uA_V2_CFU0_DEBUG_DUMP_I,
+    vuA_CFU0_DEBUG_DUMP_X = uA_V2_CFU0_DEBUG_DUMP_X,
+    vuA_CFU0_DEBUG_DUMP_O = uA_V2_CFU0_DEBUG_DUMP_O
+  }
+)
+
+// --------------------

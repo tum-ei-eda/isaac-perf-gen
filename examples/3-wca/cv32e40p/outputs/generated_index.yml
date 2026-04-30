@@ -1,0 +1,220 @@
+candidates:
+- properties:
+    '#Operands': 3
+    InstrName: CFU0_PUSH_WEIGHTS
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+- properties:
+    '#Operands': 3
+    InstrName: CFU0_SET_CODEBOOK_2B
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+- properties:
+    '#Operands': 3
+    InstrName: CFU0_SET_CODEBOOK_4B
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+- properties:
+    '#Operands': 3
+    InstrName: CFU0_SET_CODEBOOK_16B
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+- properties:
+    '#Operands': 3
+    InstrName: CFU0_ALU_MAC
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+- properties:
+    '#Operands': 3
+    InstrName: CFU0_ALU_RST
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+- properties:
+    '#Operands': 3
+    InstrName: CFU0_MAC_READ
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+- properties:
+    '#Operands': 3
+    InstrName: CFU0_MAC_READ_NO_RESET
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+- properties:
+    '#Operands': 3
+    InstrName: CFU0_DEBUG_DUMP
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+global:
+  properties:
+    xlen: 32
