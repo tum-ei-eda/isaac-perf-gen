@@ -8,5 +8,7 @@ isaac\_load\_cdsl.cdsl\_loader
 
    .. autosummary::
    
+      cdsl_to_m2_model
       main
+      run_coredsl2_loader
    

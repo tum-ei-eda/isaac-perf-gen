@@ -8,5 +8,10 @@ isaac\_fake\_hls.fake\_hls
 
    .. autosummary::
    
+      generate_variants
+      get_parser
+      handle
       main
+      parse_strategy_string
+      run_fake_hls
    
