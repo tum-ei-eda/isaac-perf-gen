@@ -29,7 +29,10 @@ from typing import Optional, List
 
 
 def cdsl_to_m2_model(
-    file: str, out_file: Optional[str] = None, is_set: bool = True, includes: Optional[List[str]] = None
+    file: str,
+    out_file: Optional[str] = None,
+    is_set: bool = True,
+    includes: Optional[List[str]] = None,
 ):
     with tempfile.TemporaryDirectory() as tmpdirname:
         tmpdir = Path(tmpdirname)
@@ -40,7 +43,11 @@ def cdsl_to_m2_model(
         args = [
             "python3",
             "-m",
-            "m2isar.frontends.coredsl2_set.parser" if is_set else "m2isar.frontends.coredsl2.parser",
+            (
+                "m2isar.frontends.coredsl2_set.parser"
+                if is_set
+                else "m2isar.frontends.coredsl2.parser"
+            ),
             file,
             "-o",
             tmpdir,
@@ -142,7 +149,9 @@ def run_coredsl2_loader(
                 operand_reg_classes.append(op_reg_class)
                 # print("op_type", op_type)
                 # print("op_reg_class", op_reg_class)
-                assert op_dir is not None, "fUnable to infer op_dir from name: {op_name}"
+                assert (
+                    op_dir is not None
+                ), "fUnable to infer op_dir from name: {op_name}"
             return (
                 num_operands,
                 operand_dirs,
@@ -196,9 +205,21 @@ def main():
     parser.add_argument("--output", "-o", default=None)
     parser.add_argument("--set", default="XIsaac")
     parser.add_argument("--xlen", type=int, default=None, required=True)
-    parser.add_argument("-I", dest="includes", action="append", default=[], help="Extra include directories")
+    parser.add_argument(
+        "-I",
+        dest="includes",
+        action="append",
+        default=[],
+        help="Extra include directories",
+    )
     args = parser.parse_args()
-    run_coredsl2_loader(args.file, out_file=args.output, includes=args.includes, set_name=args.set, xlen=args.xlen)
+    run_coredsl2_loader(
+        args.file,
+        out_file=args.output,
+        includes=args.includes,
+        set_name=args.set,
+        xlen=args.xlen,
+    )
 
 
 if __name__ == "__main__":

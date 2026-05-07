@@ -43,7 +43,9 @@ from isaac_perf_common.config import VariantsConfig
 pd.set_option("display.max_columns", None)
 
 
-def filter_variants(variants_config: VariantsConfig, variants_filter: Union[str, List[int]] = None):
+def filter_variants(
+    variants_config: VariantsConfig, variants_filter: Union[str, List[int]] = None
+):
     assert variants_filter is not None
     if isinstance(variants_filter, str):
         variants_filter = list(map(int, variants_filter.split(",")))
@@ -51,7 +53,10 @@ def filter_variants(variants_config: VariantsConfig, variants_filter: Union[str,
     # assert all(isinstance(x, int) for x in variants_filter)
     filtered_variants = []
     for variant_config in variants_config.variants:
-        if variant_config.idx in variants_filter or variant_config.name in variants_filter:
+        if (
+            variant_config.idx in variants_filter
+            or variant_config.name in variants_filter
+        ):
             filtered_variants.append(variant_config)
     ret = VariantsConfig(filtered_variants)
     return ret
@@ -69,7 +74,9 @@ def get_permutations(d):
 
 
 def get_templates_base(core: Optional[str] = None, part: bool = False):
-    templates_path = files("isaac_perf_gen.templates")  # .joinpath("message.eml").read_text()
+    templates_path = files(
+        "isaac_perf_gen.templates"
+    )  # .joinpath("message.eml").read_text()
     # print("templates_path", templates_path)
     if core is not None:
         templates_path = templates_path.joinpath(core)
@@ -84,7 +91,12 @@ def get_templates_base(core: Optional[str] = None, part: bool = False):
     return templates_path
 
 
-def lookup_template(inp: str, core: Optional[str] = None, suffix: Optional[str] = None, part: bool = False):
+def lookup_template(
+    inp: str,
+    core: Optional[str] = None,
+    suffix: Optional[str] = None,
+    part: bool = False,
+):
     # print("lookup_template", inp, core, suffix, part)
     assert inp is not None
     inp = str(inp)
@@ -119,8 +131,12 @@ def lookup_template(inp: str, core: Optional[str] = None, suffix: Optional[str] 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--template", default=None, help="Base MAKO Template")
-    parser.add_argument("-o", "--output", default=None, help="Output .core_perf_dsl file path")
-    parser.add_argument("--monitor-template", default=None, help="Mako template for monitor description")
+    parser.add_argument(
+        "-o", "--output", default=None, help="Output .core_perf_dsl file path"
+    )
+    parser.add_argument(
+        "--monitor-template", default=None, help="Mako template for monitor description"
+    )
     parser.add_argument(
         "--monitor-dest",
         default=None,
@@ -131,20 +147,32 @@ def main():
         default=None,
         help="Directory containing generated INI files (and mako templates)",
     )
-    parser.add_argument("--uarchs-dest", default=None, help="Output CSV file for uarch names")
-    parser.add_argument("-c", "--core", required=True, choices=["cv32e40p", "cva6"], help="Base core")
+    parser.add_argument(
+        "--uarchs-dest", default=None, help="Output CSV file for uarch names"
+    )
+    parser.add_argument(
+        "-c", "--core", required=True, choices=["cv32e40p", "cva6"], help="Base core"
+    )
     parser.add_argument("-u", "--uarch", default=None, help="Perf model name")
-    parser.add_argument("-a", "--etiss-arch", default="XIsaacCore", help="Base ETISS arch name")
-    parser.add_argument("--temp-dir", default=None, help="Optional path to persistent temp dir")
+    parser.add_argument(
+        "-a", "--etiss-arch", default="XIsaacCore", help="Base ETISS arch name"
+    )
+    parser.add_argument(
+        "--temp-dir", default=None, help="Optional path to persistent temp dir"
+    )
     parser.add_argument("--hls-dir", default=None, help="Path to hls output dir")
-    parser.add_argument("--variants-yaml", default=None, help="Path to variants YAML file")
+    parser.add_argument(
+        "--variants-yaml", default=None, help="Path to variants YAML file"
+    )
     # parser.add_argument("--hls-schedules", default=None, help="Path to hls_schedules.csv")
     # parser.add_argument("--hls-yaml", default=None, help="Path to ISAX_XIsaac.yaml")
     # parser.add_argument("--selected-solutions", default=None, help="Path to selected_solutions.yaml")
     parser.add_argument("--variants-filter", default=None, help="Filter variants")
     parser.add_argument("--index-yaml", default=None, help="Path to XISAAC index.yml")
     parser.add_argument("--parts-only", action="store_true", help="Only generate parts")
-    parser.add_argument("--render-only", action="store_true", help="Only render final output")
+    parser.add_argument(
+        "--render-only", action="store_true", help="Only render final output"
+    )
     args = parser.parse_args()
     core = args.core
     core_name = args.etiss_arch
@@ -167,7 +195,14 @@ def main():
 
     templates_path = get_templates_base(core=core)
     common_path = get_templates_base(core="common")
-    template_dirs = [".", "templates/", templates_path, f"{templates_path}/parts", common_path, f"{common_path}/parts"]
+    template_dirs = [
+        ".",
+        "templates/",
+        templates_path,
+        f"{templates_path}/parts",
+        common_path,
+        f"{common_path}/parts",
+    ]
     lookup_dirs = defaultdict(list)
     lookup_dirs2 = []
     xlen = None
@@ -220,10 +255,14 @@ def main():
                 trace_values = set()
                 for instr_name, instr_operands in instr_operands_map.items():
                     reg_operands = {
-                        operand_name: data for operand_name, data in instr_operands.items() if data[1] == "REG"
+                        operand_name: data
+                        for operand_name, data in instr_operands.items()
+                        if data[1] == "REG"
                     }
                     imm_operands = {
-                        operand_name: data for operand_name, data in instr_operands.items() if data[1] == "IMM"
+                        operand_name: data
+                        for operand_name, data in instr_operands.items()
+                        if data[1] == "IMM"
                     }
                     reg_names = list(reg_operands.keys()) + list(imm_operands.keys())
                     for reg_name in reg_names:
@@ -234,7 +273,9 @@ def main():
             if args.hls_dir:
                 # print("--hls-dir arg is deprecated, Please run isaac-load-hls first and pass --perf-yaml")
                 # variants_config = load_hls_artifacts(args.hls_dir)
-                raise RuntimeError("--hls-dir arg is deprecated, Please run isaac-load-hls first and pass --perf-yaml")
+                raise RuntimeError(
+                    "--hls-dir arg is deprecated, Please run isaac-load-hls first and pass --perf-yaml"
+                )
             else:
                 assert args.variants_yaml is not None
                 variants_config = VariantsConfig.from_yaml_file(args.variants_yaml)
@@ -305,13 +346,19 @@ def main():
                 }
                 core_parts_map = cores_parts_map.get(args.core)
                 core_parts_map2 = cores_parts_map2.get(args.core)
-                assert core_parts_map is not None, f"Parts not found for core '{args.core}'"
-                assert core_parts_map2 is not None, f"Parts not found for core '{args.core}'"
+                assert (
+                    core_parts_map is not None
+                ), f"Parts not found for core '{args.core}'"
+                assert (
+                    core_parts_map2 is not None
+                ), f"Parts not found for core '{args.core}'"
                 for part_file, part_tmpl in core_parts_map.items():
                     # print("template_dirs", template_dirs)
                     mylookup = TemplateLookup(directories=template_dirs)
                     # part_template = Template(filename=f"{templates_path}/parts/{part_tmpl}", lookup=mylookup)
-                    part_tmpl = lookup_template(part_tmpl, core=args.core, suffix=".corePerfDsl", part=True)
+                    part_tmpl = lookup_template(
+                        part_tmpl, core=args.core, suffix=".corePerfDsl", part=True
+                    )
                     part_template = Template(filename=part_tmpl, lookup=mylookup)
                     assert part_tmpl is not None
                     part_content = part_template.render(
@@ -334,7 +381,9 @@ def main():
                 for part_file, part_tmpl in core_parts_map2.items():
                     # print("part_file", part_file)
                     # print("part_tmpl", part_tmpl)
-                    part_tmpl = lookup_template(part_tmpl, core=args.core, suffix=".corePerfDsl", part=True)
+                    part_tmpl = lookup_template(
+                        part_tmpl, core=args.core, suffix=".corePerfDsl", part=True
+                    )
                     assert part_tmpl is not None
                     mylookup = TemplateLookup(directories=template_dirs)
                     # part_template = Template(filename=f"{templates_path}/parts/{part_tmpl}", lookup=mylookup)
@@ -371,13 +420,20 @@ def main():
                     assert core is not None
                     core2template = {"cv32e40p": "CV32E40PXISAAC", "cva6": "CVA6XISAAC"}
                     template = core2template.get(core)
-                    assert template is not None, f"Could not find template for core {core}"
-                template = lookup_template(template, core=args.core, suffix=".corePerfDsl")
+                    assert (
+                        template is not None
+                    ), f"Could not find template for core {core}"
+                template = lookup_template(
+                    template, core=args.core, suffix=".corePerfDsl"
+                )
                 # print("template", template)
                 assert template is not None
                 mytemplate = Template(filename=template, lookup=mylookup)
                 content = mytemplate.render(
-                    variants=variant_names, new=True, uarch_name=uarch_name, core_name=core_name
+                    variants=variant_names,
+                    new=True,
+                    uarch_name=uarch_name,
+                    core_name=core_name,
                 )
                 # if variant_name is not None:
                 #     header = f"// Variant: {variant_name}\n"
@@ -393,9 +449,15 @@ def main():
         if monitor_template is None:
             assert core is not None
             core2monitor_template = {}
-            monitor_template = core2monitor_template.get(core, "InstructionTrace_XISAAC")
-            assert monitor_template is not None, f"Could not find monitor_template for core {core}"
-        monitor_template = lookup_template(monitor_template, core=args.core, suffix=".json")
+            monitor_template = core2monitor_template.get(
+                core, "InstructionTrace_XISAAC"
+            )
+            assert (
+                monitor_template is not None
+            ), f"Could not find monitor_template for core {core}"
+        monitor_template = lookup_template(
+            monitor_template, core=args.core, suffix=".json"
+        )
         # print("monitor_template", monitor_template)
         monitor_template = Path(monitor_template)
         assert monitor_template.is_file()

@@ -182,30 +182,54 @@ def generate_variants(sg_schedules, strategy_strings):
                     ranked = sorted(enumerate(scheds), key=lambda x: x[1]["ii"])
 
                 elif strategy_name == "max_ii":
-                    ranked = sorted(enumerate(scheds), key=lambda x: x[1]["ii"], reverse=True)
+                    ranked = sorted(
+                        enumerate(scheds), key=lambda x: x[1]["ii"], reverse=True
+                    )
 
                 elif strategy_name == "min_lat":
-                    ranked = sorted(enumerate(scheds), key=lambda x: sum(x[1]["lats"].values()))
+                    ranked = sorted(
+                        enumerate(scheds), key=lambda x: sum(x[1]["lats"].values())
+                    )
 
                 elif strategy_name == "max_lat":
-                    ranked = sorted(enumerate(scheds), key=lambda x: sum(x[1]["lats"].values()), reverse=True)
+                    ranked = sorted(
+                        enumerate(scheds),
+                        key=lambda x: sum(x[1]["lats"].values()),
+                        reverse=True,
+                    )
                 if strategy_name == "min_ii_min_lat":
-                    ranked = sorted(enumerate(scheds), key=lambda x: (x[1]["ii"], sum(x[1]["lats"].values())))
+                    ranked = sorted(
+                        enumerate(scheds),
+                        key=lambda x: (x[1]["ii"], sum(x[1]["lats"].values())),
+                    )
 
                 elif strategy_name == "min_ii_max_lat":
-                    ranked = sorted(enumerate(scheds), key=lambda x: (x[1]["ii"], -sum(x[1]["lats"].values())))
+                    ranked = sorted(
+                        enumerate(scheds),
+                        key=lambda x: (x[1]["ii"], -sum(x[1]["lats"].values())),
+                    )
 
                 elif strategy_name == "max_ii_min_lat":
-                    ranked = sorted(enumerate(scheds), key=lambda x: (-x[1]["ii"], sum(x[1]["lats"].values())))
+                    ranked = sorted(
+                        enumerate(scheds),
+                        key=lambda x: (-x[1]["ii"], sum(x[1]["lats"].values())),
+                    )
 
                 elif strategy_name == "max_ii_max_lat":
-                    ranked = sorted(enumerate(scheds), key=lambda x: (-x[1]["ii"], -sum(x[1]["lats"].values())))
+                    ranked = sorted(
+                        enumerate(scheds),
+                        key=lambda x: (-x[1]["ii"], -sum(x[1]["lats"].values())),
+                    )
 
                 elif strategy_name == "min_area":
-                    ranked = sorted(enumerate(scheds), key=lambda x: 123.0)  # TODO real area
+                    ranked = sorted(
+                        enumerate(scheds), key=lambda x: 123.0
+                    )  # TODO real area
 
                 elif strategy_name == "max_area":
-                    ranked = sorted(enumerate(scheds), key=lambda x: 123.0, reverse=True)  # TODO real area
+                    ranked = sorted(
+                        enumerate(scheds), key=lambda x: 123.0, reverse=True
+                    )  # TODO real area
 
                 elif strategy_name == "balanced":
                     alpha = kwargs.get("alpha", 1.0)
@@ -340,9 +364,15 @@ def run_fake_hls(
                 full_lat = lat + first_stage
                 sched = {"lat": lat, "full_lat": full_lat, "ii": ii}
                 instr_schedules[name].append(sched)
-                sg_sched = {"lats": {name: lat}, "full_lats": {name: full_lat}, "ii": ii}
+                sg_sched = {
+                    "lats": {name: lat},
+                    "full_lats": {name: full_lat},
+                    "ii": ii,
+                }
                 sg_schedules[sg].append(sg_sched)
-        print("instr_schedules[name]", instr_schedules[name], len(instr_schedules[name]))
+        print(
+            "instr_schedules[name]", instr_schedules[name], len(instr_schedules[name])
+        )
         print("sg_schedules[sg]", sg_schedules[sg], len(sg_schedules[sg]))
 
     print("instr_schedules", instr_schedules, len(instr_schedules))
@@ -603,14 +633,21 @@ def run_fake_hls(
             for instr_name, lat in lats.items():
                 stage = first_stage + lat - 1  # TODO!
                 max_stage = max(max_stage, stage)
-                dummy_sched = [{"interface": "foo", "stage": first_stage}, {"interface": "bar", "stage": stage}]
+                dummy_sched = [
+                    {"interface": "foo", "stage": first_stage},
+                    {"interface": "bar", "stage": stage},
+                ]
                 new3 = {"instruction": instr_name, "schedule": dummy_sched}
                 variant_isax_xisaac_yaml_data.append(new3)
                 instr_config = InstrConfig(name=instr_name, cycles=lat, ii=ii, sg=sg)
                 variant_instrs.append(instr_config)
             lats_str = ", ".join(f"{instr}: {lat}" for instr, lat in lats.items())
-            full_lats_str = ", ".join(f"{instr}: {lat}" for instr, lat in full_lats.items())
-            detail = f"SG{sg}(II={ii}, lats={{{lats_str}}}, full_lats={{{full_lats_str}}})"
+            full_lats_str = ", ".join(
+                f"{instr}: {lat}" for instr, lat in full_lats.items()
+            )
+            detail = (
+                f"SG{sg}(II={ii}, lats={{{lats_str}}}, full_lats={{{full_lats_str}}})"
+            )
             details.append(detail)
         details_str = ", ".join(details)
         # print("details_str", details_str)
@@ -621,7 +658,9 @@ def run_fake_hls(
         else:
             variant_dir.mkdir(exist_ok=True)
             variant_isax_xisaac_yaml_data.append({"last stage": max_stage + 1})
-            variant_selected_solutions_yaml_path = variant_dir / "selected_solutions.yaml"
+            variant_selected_solutions_yaml_path = (
+                variant_dir / "selected_solutions.yaml"
+            )
             # print("variant_selected_solutions_yaml_data", variant_selected_solutions_yaml_data)
             with open(variant_selected_solutions_yaml_path, "w") as f:
                 yaml.dump(variant_selected_solutions_yaml_data, f)
@@ -676,13 +715,17 @@ def run_fake_hls(
             )
         else:
             variant_dir = hls_outputs_path / variant_name
-            variant_metrics_row, variant_instrs, details_str, total_area_estimate = process_variant(
-                variant_idx, variant_name, variant, description, variant_dir
+            variant_metrics_row, variant_instrs, details_str, total_area_estimate = (
+                process_variant(
+                    variant_idx, variant_name, variant, description, variant_dir
+                )
             )
             variant_metrics_rows.append(variant_metrics_row)
             if variant_idx == 0:
                 # export first variant to base out dir for annotation (assign_hls)
-                _ = process_variant(variant_idx, variant_name, variant, description, hls_outputs_path)
+                _ = process_variant(
+                    variant_idx, variant_name, variant, description, hls_outputs_path
+                )
         variant_metrics = {"total_area_estimate": total_area_estimate}
         variant_config = VariantConfig(
             name=variant_name,
@@ -704,7 +747,9 @@ def run_fake_hls(
         hls_selected_schedule_metrics_df = pd.DataFrame(variant_metrics_rows)
         # print("hls_selected_schedule_metrics_df")
         # print(hls_selected_schedule_metrics_df)
-        hls_selected_schedule_metrics_csv_path = out_path / "hls_selected_schedule_metrics.csv"
+        hls_selected_schedule_metrics_csv_path = (
+            out_path / "hls_selected_schedule_metrics.csv"
+        )
         hls_selected_schedule_metrics_df.to_csv(hls_selected_schedule_metrics_csv_path)
         variants_yaml_path = out_path / "variants.yml"
         variants_config.to_yaml_file(variants_yaml_path)

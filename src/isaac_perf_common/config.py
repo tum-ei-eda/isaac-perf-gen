@@ -49,7 +49,9 @@ class YAMLSettings:
         try:
             return from_dict(data_class=cls, data=data, config=Config(strict=True))
         except dacite.exceptions.UnexpectedDataError as err:
-            logging.error("Unexpected key in ISAACConfig. Check for missmatch between ISAAC Toolkit versions!")
+            logging.error(
+                "Unexpected key in ISAACConfig. Check for missmatch between ISAAC Toolkit versions!"
+            )
             raise err
 
     @classmethod
@@ -74,7 +76,9 @@ class YAMLSettings:
         with open(path, "w") as file:
             file.write(text)
 
-    def merge(self, other: "YAMLSettings", overwrite: bool = False, inplace: bool = False):
+    def merge(
+        self, other: "YAMLSettings", overwrite: bool = False, inplace: bool = False
+    ):
         """Merge two instances of YAMLSettings."""
         if not inplace:
             ret = replace(self)  # Make a copy of self
@@ -108,8 +112,14 @@ class YAMLSettings:
                                 for dict_key, dict_val in v1.items():
                                     if dict_key in v2:
                                         if isinstance(dict_val, YAMLSettings):
-                                            assert isinstance(v2[dict_key], YAMLSettings)
-                                            v2[dict_key].merge(dict_val, overwrite=overwrite, inplace=True)
+                                            assert isinstance(
+                                                v2[dict_key], YAMLSettings
+                                            )
+                                            v2[dict_key].merge(
+                                                dict_val,
+                                                overwrite=overwrite,
+                                                inplace=True,
+                                            )
                                         elif isinstance(dict_val, dict):
                                             v2[dict_key].update(dict_val)
                                         else:

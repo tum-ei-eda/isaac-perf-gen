@@ -42,9 +42,15 @@ def load_hls_artifacts(
     variants = {}
     variant_extras = {}
     if hls_schedules_df is not None:
-        hls_schedules_df["SG"] = hls_schedules_df["config"].apply(lambda x: int(x.split("_")[1]))
-    hls_selected_schedule_metrics_csv = Path(hls_dir) / "hls_selected_schedule_metrics.csv"
-    assert hls_selected_schedule_metrics_csv.is_file(), f"Missing: {hls_selected_schedule_metrics_csv}"
+        hls_schedules_df["SG"] = hls_schedules_df["config"].apply(
+            lambda x: int(x.split("_")[1])
+        )
+    hls_selected_schedule_metrics_csv = (
+        Path(hls_dir) / "hls_selected_schedule_metrics.csv"
+    )
+    assert (
+        hls_selected_schedule_metrics_csv.is_file()
+    ), f"Missing: {hls_selected_schedule_metrics_csv}"
     hls_variants_df = pd.read_csv(hls_selected_schedule_metrics_csv)
     # num_variants = len(hls_variants_df)
     # print("hls_variants_df")
@@ -69,9 +75,13 @@ def load_hls_artifacts(
             total_area_estimate,
         )
         if variant_name is not None:
-            selected_solutions_yaml = Path(hls_dir) / "output" / variant_name / "selected_solutions.yaml"
+            selected_solutions_yaml = (
+                Path(hls_dir) / "output" / variant_name / "selected_solutions.yaml"
+            )
         else:
-            selected_solutions_yaml = Path(hls_dir) / "output" / "selected_solutions.yaml"
+            selected_solutions_yaml = (
+                Path(hls_dir) / "output" / "selected_solutions.yaml"
+            )
         assert selected_solutions_yaml.is_file(), f"Missing: {selected_solutions_yaml}"
         with open(selected_solutions_yaml) as f:
             selected_solutions = yaml.safe_load(f)
@@ -95,9 +105,14 @@ def load_hls_artifacts(
             # print("hls_data", hls_data)
 
         def apply_selection(hls_schedules_df, selected_solutions):
-            configs = [f"SG_{x['sharing_group']}_SOL_IDX_{x['solution_idx']}" for x in selected_solutions]
+            configs = [
+                f"SG_{x['sharing_group']}_SOL_IDX_{x['solution_idx']}"
+                for x in selected_solutions
+            ]
             # print("configs", configs)
-            hls_schedules_df_ = hls_schedules_df[hls_schedules_df["config"].isin(configs)]
+            hls_schedules_df_ = hls_schedules_df[
+                hls_schedules_df["config"].isin(configs)
+            ]
             return hls_schedules_df_
 
         hls_schedules_df_ = apply_selection(hls_schedules_df, selected_solutions)
@@ -170,7 +185,12 @@ def load_hls_artifacts(
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("hls_dir", default=None, help="Path to hls output dir")
-    parser.add_argument("-o", "--output", default=None, help="Output YAML file path. Prints to stdout if None")
+    parser.add_argument(
+        "-o",
+        "--output",
+        default=None,
+        help="Output YAML file path. Prints to stdout if None",
+    )
     args = parser.parse_args()
 
     variants_config = load_hls_artifacts(args.hls_dir)
