@@ -15,6 +15,7 @@ OUTPUTS_DIR=$SCRIPT_DIR/outputs
 INDEX_FILE=$INPUTS_DIR/final_index.yml
 # TEMPLATE_FILE=...
 HLS_DIR=$INPUTS_DIR/hls
+VARIANTS_YAML_OUT=$OUTPUTS_DIR/variants.yml
 TEMP_OUT=$OUTPUTS_DIR/temp
 INI_OUT=$OUTPUTS_DIR/ini
 CDSL_PERF_OUT=$OUTPUTS_DIR/$UARCH_NAME.corePerfDsl
@@ -23,8 +24,10 @@ UARCHS_OUT=$OUTPUTS_DIR/uarchs.csv
 MONITOR_OUT=$OUTPUTS_DIR/$MONITOR_NAME.json
 EXTRA_ARGS=""
 
+isaac-load-hls $HLS_DIR -o $VARIANTS_YAML_OUT
+
 isaac-perf-gen -c $CORE \
-    --index $INDEX_FILE --hls-dir $HLS_DIR \
+    --index $INDEX_FILE --variants-yaml $VARIANTS_YAML_OUT \
     --temp-dir $TEMP_OUT -o $CDSL_PERF_OUT \
     --ini-dest $INI_OUT --uarchs-dest $UARCHS_OUT \
     --monitor-dest $MONITOR_OUT $EXTRA_ARGS

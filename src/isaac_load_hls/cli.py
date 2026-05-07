@@ -16,8 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-"""ISAAC Perf Gen CLI."""
+"""ISAAC HLS Loader CLI."""
 
-from .gen_xisaac_core_perf_dsl import main
+from .hls_loader import main
 
 __all__ = ["main"]

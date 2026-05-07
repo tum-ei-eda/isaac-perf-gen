@@ -24,7 +24,9 @@ Issues = "https://github.com/tum-ei-eda/isaac-perf-gen/issues"
 isaac-perf-gen = "isaac_perf_gen.cli:main"
 isaac-perf-verify = "isaac_perf_verify.cli:main"
 isaac-fake-hls = "isaac_fake_hls.cli:main"
+isaac-fake-hls2 = "isaac_fake_hls.cli:main2"
 isaac-load-cdsl = "isaac_load_cdsl.cli:main"
+isaac-load-hls = "isaac_load_hls.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

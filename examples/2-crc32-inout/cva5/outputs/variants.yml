@@ -1,0 +1,20 @@
+variants:
+- description: null
+  details: null
+  idx: 0
+  instrs:
+  - cycles: 1
+    ii: 1
+    name: CUSTOM83
+    sg: 2
+  - cycles: 2
+    ii: 1
+    name: CUSTOM21
+    sg: 1
+  - cycles: 1
+    ii: 1
+    name: CUSTOM16
+    sg: 3
+  metrics:
+    total_area_estimate: 31311.291259
+  name: null

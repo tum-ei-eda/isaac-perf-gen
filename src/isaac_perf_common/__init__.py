@@ -16,8 +16,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-"""ISAAC Perf Gen CLI."""
-
-from .gen_xisaac_core_perf_dsl import main
-
-__all__ = ["main"]
+"""Common utils."""

@@ -19,7 +19,7 @@
 """ISAAC Fake HLS Script."""
 
 import re
-import sys
+import logging
 import itertools
 import random
 from math import ceil
@@ -30,6 +30,8 @@ from typing import Optional, Union, List
 from pathlib import Path
 from collections import defaultdict
 import pandas as pd
+
+from isaac_perf_common.config import InstrConfig, VariantConfig, VariantsConfig
 
 # SUPPORTED_STRATEGIES = ["best", "worst", "random"]
 SUPPORTED_VARIANT_STRATEGIES = [
@@ -243,7 +245,7 @@ def run_fake_hls(
     strategies: Optional[List[str]] = None,
     index: Optional[Union[str, Path]] = None,
     # workdir: Optional[Union[str, Path]] = None,
-    out_dir: Optional[Union[str, Path]] = None,
+    out_path: Optional[Union[str, Path]] = None,
     label: Optional[str] = None,
     force: bool = False,
     verbose: bool = False,
@@ -251,19 +253,26 @@ def run_fake_hls(
     min_lat: int = 1,
     max_lat: Optional[int] = None,
     use_lats: Optional[List[int]] = None,
+    yaml_only: bool = False,
 ):
+    variants_ = []
     # assert workdir is not None
     # if not isinstance(workdir, Path):
     #     workdir = Path(workdir)
     # assert workdir.is_dir()
     # out_dir = workdir / "local" / "fake_hls"
-    assert out_dir is not None
-    if not isinstance(out_dir, Path):
-        out_dir = Path(out_dir)
-    out_dir.mkdir(exist_ok=True, parents=True)
-    # assert out_dir.is_dir()
+    if yaml_only:
+        if out_path is not None:
+            if not isinstance(out_path, Path):
+                out_path = Path(out_path)
+    else:
+        assert out_path is not None
+        if not isinstance(out_path, Path):
+            out_path = Path(out_path)
+        out_path.mkdir(exist_ok=True, parents=True)
+        assert out_path.is_dir()
     # TODO: handle suffix
-    print("FAKE HLS")
+    # print("FAKE HLS")
     if strategies is None:
         # strategies = [DEFAULT_STRATEGY]
         strategies = DEFAULT_STRATEGIES
@@ -359,8 +368,8 @@ def run_fake_hls(
     # TODO: sample schedule-combinations
     # Output format
     hls_schedules_csv_data = []
-    all_hls_schedules_csv_data = []
-    max_stage = first_stage
+    # all_hls_schedules_csv_data = []
+    # max_stage = first_stage
     # for instr_name, scheds in hls_schedules.items():
     #     for sol_idx, sched in enumerate(scheds):
     #         config = f"SG_{sg}_SOL_IDX_{sol_idx}"
@@ -441,20 +450,21 @@ def run_fake_hls(
             allocs = {}
             area_est = get_estimated_area(sg_sched, instr_cost_dict)  # WIP
             area_est2 = area_est
-            new2 = {
-                "config": config,
-                "idx": sol_idx,
-                "II": ii,
-                "Fallback": False,
-                "Instruction latencies": full_lats,
-                "Allocation": allocs,
-                "Overall latency": max_lat,
-                "Area estimate w/o lifetimes": area_est,
-                "Area estimate w/ lifetimes": area_est2,
-                "Total lifetime": 0.0,
-                "Total decoupled ops": 0,
-            }
-            hls_schedules_csv_data.append(new2)
+            if not yaml_only:
+                new2 = {
+                    "config": config,
+                    "idx": sol_idx,
+                    "II": ii,
+                    "Fallback": False,
+                    "Instruction latencies": full_lats,
+                    "Allocation": allocs,
+                    "Overall latency": max_lat,
+                    "Area estimate w/o lifetimes": area_est,
+                    "Area estimate w/ lifetimes": area_est2,
+                    "Total lifetime": 0.0,
+                    "Total decoupled ops": 0,
+                }
+                hls_schedules_csv_data.append(new2)
     # for instr_name, sched in selected_schedules.items():
     #     sol_idx = selected_schedules_idx[instr_name]
     #     new = {"sharing_group": sg, "solution_idx": sol_idx}
@@ -489,11 +499,10 @@ def run_fake_hls(
     #     sg += 1
     # print("hls_schedules_csv_data", hls_schedules_csv_data)
     # print("isax_xisaac_yaml_data", isax_xisaac_yaml_data)
-    hls_schedules_csv_path = out_dir / "hls_schedules.csv"
-    hls_outputs_path = out_dir / "output"
-    hls_outputs_path.mkdir(exist_ok=True)
-    hls_schedules_df = pd.DataFrame(hls_schedules_csv_data)
-    hls_schedules_df.to_csv(hls_schedules_csv_path)
+    if not yaml_only:
+        hls_schedules_csv_path = out_path / "hls_schedules.csv"
+        hls_schedules_df = pd.DataFrame(hls_schedules_csv_data)
+        hls_schedules_df.to_csv(hls_schedules_csv_path)
 
     # total_area_estimate = 0
     # total_area_estimate_with_lifetimes = 0
@@ -552,11 +561,9 @@ def run_fake_hls(
     # ]
     # hls_selected_schedule_metrics_df = pd.DataFrame([hls_selected_schedule_metrics_data])
     # print("hls_selected_schedule_metrics_df", hls_selected_schedule_metrics_df)
-    hls_selected_schedule_metrics_csv_path = out_dir / "hls_selected_schedule_metrics.csv"
     # hls_selected_schedule_metrics_df.to_csv(hls_selected_schedule_metrics_csv_path)
 
-    def process_variant(variant_ifx, variant_name, variant, description, variant_dir):
-        variant_dir.mkdir(exist_ok=True)
+    def process_variant(variant_idx, variant_name, variant, description, variant_dir):
 
         variant_selected_solutions_yaml_data = []
         variant_isax_xisaac_yaml_data = []
@@ -570,11 +577,14 @@ def run_fake_hls(
         group_instr_counts = []
         details = []
         max_stage = 0
+        variant_instrs = []
 
         for sg, sol_idx in variant.items():
             num_groups += 1
 
             sg_sched = sg_schedules[sg][sol_idx]
+            area_estimate = get_estimated_area(sg_sched, instr_cost_dict)  # WIP
+            area_estimate2 = area_estimate
 
             ii = sg_sched["ii"]
             iis.append(ii)
@@ -586,9 +596,8 @@ def run_fake_hls(
             num_instrs += instr_count
             all_lats += list(full_lats.values())
 
-            area_estimate = 123.0
             total_area_estimate += area_estimate
-            total_area_estimate_with_lifetimes += area_estimate
+            total_area_estimate_with_lifetimes += area_estimate2
             new = {"sharing_group": sg, "solution_idx": sol_idx}
             variant_selected_solutions_yaml_data.append(new)
             for instr_name, lat in lats.items():
@@ -597,6 +606,8 @@ def run_fake_hls(
                 dummy_sched = [{"interface": "foo", "stage": first_stage}, {"interface": "bar", "stage": stage}]
                 new3 = {"instruction": instr_name, "schedule": dummy_sched}
                 variant_isax_xisaac_yaml_data.append(new3)
+                instr_config = InstrConfig(name=instr_name, cycles=lat, ii=ii, sg=sg)
+                variant_instrs.append(instr_config)
             lats_str = ", ".join(f"{instr}: {lat}" for instr, lat in lats.items())
             full_lats_str = ", ".join(f"{instr}: {lat}" for instr, lat in full_lats.items())
             detail = f"SG{sg}(II={ii}, lats={{{lats_str}}}, full_lats={{{full_lats_str}}})"
@@ -605,66 +616,101 @@ def run_fake_hls(
         # print("details_str", details_str)
         # input("!")
         # variant_isax_xisaac_yaml_data.append({"last_stage": max_stage + 1})
-        variant_isax_xisaac_yaml_data.append({"last stage": max_stage + 1})
-        variant_selected_solutions_yaml_path = variant_dir / "selected_solutions.yaml"
-        # print("variant_selected_solutions_yaml_data", variant_selected_solutions_yaml_data)
-        with open(variant_selected_solutions_yaml_path, "w") as f:
-            yaml.dump(variant_selected_solutions_yaml_data, f)
-        variant_isax_xisaac_yaml_path = variant_dir / "ISAX_XIsaac.yaml"
-        with open(variant_isax_xisaac_yaml_path, "w") as f:
-            yaml.dump(variant_isax_xisaac_yaml_data, f)
+        if yaml_only:
+            return variant_instrs, details_str, total_area_estimate
+        else:
+            variant_dir.mkdir(exist_ok=True)
+            variant_isax_xisaac_yaml_data.append({"last stage": max_stage + 1})
+            variant_selected_solutions_yaml_path = variant_dir / "selected_solutions.yaml"
+            # print("variant_selected_solutions_yaml_data", variant_selected_solutions_yaml_data)
+            with open(variant_selected_solutions_yaml_path, "w") as f:
+                yaml.dump(variant_selected_solutions_yaml_data, f)
+            variant_isax_xisaac_yaml_path = variant_dir / "ISAX_XIsaac.yaml"
+            with open(variant_isax_xisaac_yaml_path, "w") as f:
+                yaml.dump(variant_isax_xisaac_yaml_data, f)
 
-        max_instrs = max(group_instr_counts)
-        min_instrs = min(group_instr_counts)
-        avg_instrs = num_instrs / num_groups
+            max_instrs = max(group_instr_counts)
+            min_instrs = min(group_instr_counts)
+            avg_instrs = num_instrs / num_groups
 
-        min_ii = min(iis)
-        max_ii = max(iis)
-        avg_ii = sum(iis) / len(iis)
+            min_ii = min(iis)
+            max_ii = max(iis)
+            avg_ii = sum(iis) / len(iis)
 
-        min_lat = min(all_lats)
-        max_lat = max(all_lats)
-        avg_lat = sum(all_lats) / len(all_lats)
+            min_lat = min(all_lats)
+            max_lat = max(all_lats)
+            avg_lat = sum(all_lats) / len(all_lats)
 
-        variant_metrics_row = {
-            "num_groups": num_groups,
-            "num_instrs": num_instrs,
-            "max_instrs": max_instrs,
-            "min_instrs": min_instrs,
-            "avg_instrs": avg_instrs,
-            "min_ii": min_ii,
-            "max_ii": max_ii,
-            "avg_ii": avg_ii,
-            "min_lat": min_lat,
-            "max_lat": max_lat,
-            "avg_lat": avg_lat,
-            "total_area_estimate": total_area_estimate,
-            "total_area_estimate_with_lifetimes": total_area_estimate_with_lifetimes,
-            "Variant idx": variant_idx,
-            "Variant name": variant_name,
-            "Variant description": description,
-            "Variant details": details_str,
-        }
-        return variant_metrics_row
+            variant_metrics_row = {
+                "num_groups": num_groups,
+                "num_instrs": num_instrs,
+                "max_instrs": max_instrs,
+                "min_instrs": min_instrs,
+                "avg_instrs": avg_instrs,
+                "min_ii": min_ii,
+                "max_ii": max_ii,
+                "avg_ii": avg_ii,
+                "min_lat": min_lat,
+                "max_lat": max_lat,
+                "avg_lat": avg_lat,
+                "total_area_estimate": total_area_estimate,
+                "total_area_estimate_with_lifetimes": total_area_estimate_with_lifetimes,
+                "Variant idx": variant_idx,
+                "Variant name": variant_name,
+                "Variant description": description,
+                "Variant details": details_str,
+            }
+            return variant_metrics_row, variant_instrs, details_str, total_area_estimate
 
     variant_metrics_rows = []
+    if not yaml_only:
+        hls_outputs_path = out_path / "output"
+        hls_outputs_path.mkdir(exist_ok=True)
 
-    variants_dir = hls_outputs_path / "variants"
+    # variants_dir = hls_outputs_path / "variants"  # TODO: use?
     for variant_idx, (variant, description) in enumerate(variants):
         variant_name = f"V{variant_idx}"
-        variant_dir = hls_outputs_path / variant_name
-        variant_metrics_row = process_variant(variant_idx, variant_name, variant, description, variant_dir)
-        variant_metrics_rows.append(variant_metrics_row)
-        if variant_idx == 0:
-            # export first variant to base out dir for annotation (assign_hls)
-            _ = process_variant(variant_idx, variant_name, variant, description, hls_outputs_path)
-    hls_selected_schedule_metrics_df = pd.DataFrame(variant_metrics_rows)
-    # print("hls_selected_schedule_metrics_df")
-    # print(hls_selected_schedule_metrics_df)
-    hls_selected_schedule_metrics_df.to_csv(hls_selected_schedule_metrics_csv_path)
+        if yaml_only:
+            variant_instrs, details_str, total_area_estimate = process_variant(
+                variant_idx, variant_name, variant, description, None
+            )
+        else:
+            variant_dir = hls_outputs_path / variant_name
+            variant_metrics_row, variant_instrs, details_str, total_area_estimate = process_variant(
+                variant_idx, variant_name, variant, description, variant_dir
+            )
+            variant_metrics_rows.append(variant_metrics_row)
+            if variant_idx == 0:
+                # export first variant to base out dir for annotation (assign_hls)
+                _ = process_variant(variant_idx, variant_name, variant, description, hls_outputs_path)
+        variant_metrics = {"total_area_estimate": total_area_estimate}
+        variant_config = VariantConfig(
+            name=variant_name,
+            idx=variant_idx,
+            description=description,
+            details=details_str,
+            instrs=variant_instrs,
+            metrics=variant_metrics,
+        )
+        variants_.append(variant_config)
+    variants_config = VariantsConfig(variants_)
+    if yaml_only:
+        if out_path is None:
+            print(variants_config.to_yaml())
+        else:
+            logging.info("Writing output YAML to %s", out_path)
+            variants_config.to_yaml_file(out_path)
+    else:
+        hls_selected_schedule_metrics_df = pd.DataFrame(variant_metrics_rows)
+        # print("hls_selected_schedule_metrics_df")
+        # print(hls_selected_schedule_metrics_df)
+        hls_selected_schedule_metrics_csv_path = out_path / "hls_selected_schedule_metrics.csv"
+        hls_selected_schedule_metrics_df.to_csv(hls_selected_schedule_metrics_csv_path)
+        variants_yaml_path = out_path / "variants.yml"
+        variants_config.to_yaml_file(variants_yaml_path)
 
 
-def handle(args):
+def handle(args, yaml_only: bool = False):
     strategies = args.strategies
     # assert strategy is not None or strategies is not None
     # assert strategy is not None or strategies is not None
@@ -687,10 +733,11 @@ def handle(args):
         index=args.index,
         force=args.force,
         # workdir=args.workdir,
-        out_dir=args.output,
+        out_path=args.output,
         verbose=args.verbose,
         max_lat=args.max_lat,
         use_lats=lats,
+        yaml_only=yaml_only,
     )
 
 
@@ -715,10 +762,37 @@ def get_parser():
     return parser
 
 
+def get_parser2():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("index", type=str)
+    parser.add_argument(
+        "--log",
+        default="info",
+        choices=["critical", "error", "warning", "info", "debug"],
+    )  # TODO: move to defaults
+    parser.add_argument("--force", "-f", action="store_true")
+    # parser.add_argument("--workdir", type=str, default=None)
+    parser.add_argument("--output", "-o", type=str, default=None)
+    parser.add_argument("--set-name", type=str, default=None)
+    parser.add_argument("--core", type=str, choices=["cv32e40p"], default=None)
+    parser.add_argument("--strategies", type=str, default=None)
+    parser.add_argument("--verbose", action="store_true")
+    parser.add_argument("--max-lat", type=int, default=None)
+    parser.add_argument("--lats", type=str, default=None)
+
+    return parser
+
+
 def main():
     parser = get_parser()
     args = parser.parse_args()
     handle(args)
+
+
+def main2():
+    parser = get_parser2()
+    args = parser.parse_args()
+    handle(args, yaml_only=True)
 
 
 if __name__ == "__main__":
