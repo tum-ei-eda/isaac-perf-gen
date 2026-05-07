@@ -18,6 +18,6 @@
 #
 """ISAAC Fake HLS CLI."""
 
-from .fake_hls import main
+from .fake_hls import main, main2
 
 __all__ = ["main"]

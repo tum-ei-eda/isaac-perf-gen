@@ -1,0 +1,160 @@
+#
+# Copyright (c) 2026 TUM Department of Electrical and Computer Engineering.
+#
+# This file is part of ISAAC Perf Gen.
+# See https://github.com/tum-ei-eda/isaac-perf-gen.git for further info.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+"""ISAAC Perf Gen Script."""
+
+import logging
+from pathlib import Path
+from typing import Optional, List
+from dataclasses import dataclass, asdict, fields, replace
+
+import yaml
+import dacite
+from dacite import from_dict, Config
+
+
+# TODO: move to common
+def check_supported_types(data):
+    ALLOWED_TYPES = (int, float, str, bool)
+    if isinstance(data, dict):
+        for value in data.values():
+            check_supported_types(value)
+    elif isinstance(data, list):
+        for x in data:
+            check_supported_types(x)
+    else:
+        if data is not None:
+            assert isinstance(data, ALLOWED_TYPES), f"Unsupported type: {type(data)}"
+
+
+class YAMLSettings:
+    @classmethod
+    def from_dict(cls, data: dict):
+        """Convert dict into instance of YAMLSettings."""
+        try:
+            return from_dict(data_class=cls, data=data, config=Config(strict=True))
+        except dacite.exceptions.UnexpectedDataError as err:
+            logging.error("Unexpected key in ISAACConfig. Check for missmatch between ISAAC Toolkit versions!")
+            raise err
+
+    @classmethod
+    def from_yaml(cls, text: str):
+        data = yaml.safe_load(text)
+        return cls.from_dict(data)
+
+    @classmethod
+    def from_yaml_file(cls, path: Path):
+        with open(path, "r") as file:
+            data = yaml.safe_load(file)
+        return cls.from_dict(data=data)
+
+    def to_yaml(self):
+        data = asdict(self)
+        check_supported_types(data)
+        text = yaml.dump(data)
+        return text
+
+    def to_yaml_file(self, path: Path):
+        text = self.to_yaml()
+        with open(path, "w") as file:
+            file.write(text)
+
+    def merge(self, other: "YAMLSettings", overwrite: bool = False, inplace: bool = False):
+        """Merge two instances of YAMLSettings."""
+        if not inplace:
+            ret = replace(self)  # Make a copy of self
+        for f1 in fields(other):
+            k1 = f1.name
+            v1 = getattr(other, k1)
+            if v1 is None:
+                continue
+            t1 = type(v1)
+            found = False
+            for f2 in fields(self):
+                k2 = f2.name
+                v2 = getattr(self, k2)
+                if k2 == k1:
+                    found = True
+                    if v2 is None:
+                        if inplace:
+                            setattr(self, k2, v1)
+                        else:
+                            setattr(ret, k2, v1)
+                    else:
+                        t2 = type(v2)
+                        assert t1 is t2, "Type conflict"
+                        if isinstance(v1, YAMLSettings):
+                            v2.merge(v1, overwrite=overwrite, inplace=True)
+                        elif isinstance(v1, dict):
+                            if overwrite:
+                                v2.clear()
+                                v2.update(v1)
+                            else:
+                                for dict_key, dict_val in v1.items():
+                                    if dict_key in v2:
+                                        if isinstance(dict_val, YAMLSettings):
+                                            assert isinstance(v2[dict_key], YAMLSettings)
+                                            v2[dict_key].merge(dict_val, overwrite=overwrite, inplace=True)
+                                        elif isinstance(dict_val, dict):
+                                            v2[dict_key].update(dict_val)
+                                        else:
+                                            v2[dict_key] = dict_val
+                                    else:
+                                        v2[dict_key] = dict_val
+                        elif isinstance(v1, list):
+                            if overwrite:
+                                v2.clear()
+                            new = [x for x in v1 if x not in v2]
+                            v2.extend(new)
+                        else:
+                            assert isinstance(
+                                v2, (int, float, str, bool, Path)
+                            ), f"Unsupported field type for merge {t1}"
+                            if inplace:
+                                setattr(self, k1, v1)
+                            else:
+                                setattr(ret, k1, v1)
+                    break
+            assert found
+        if not inplace:
+            return ret
+
+
+@dataclass
+class InstrConfig(YAMLSettings):
+    name: Optional[str] = None
+    cycles: Optional[int] = None
+    ii: Optional[int] = None
+    sg: Optional[int] = None
+
+
+@dataclass
+class VariantConfig(YAMLSettings):
+    name: Optional[str] = None
+    idx: Optional[int] = None
+    details: Optional[str] = None
+    description: Optional[str] = None
+    instrs: Optional[List[InstrConfig]] = None
+    metrics: Optional[dict] = None
+
+    # TODO: sgs
+
+
+@dataclass
+class VariantsConfig(YAMLSettings):
+    variants: Optional[List[VariantConfig]] = None

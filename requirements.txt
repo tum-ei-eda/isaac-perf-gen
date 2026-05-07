@@ -2,3 +2,4 @@ pyyaml
 pandas
 mako
 importlib_resources
+dacite

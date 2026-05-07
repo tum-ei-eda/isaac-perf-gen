@@ -19,14 +19,16 @@
 """ISAAC Perf Gen Script."""
 
 import ast
+import logging
 import itertools
 import tempfile
 import argparse
 from pathlib import Path
 from collections import defaultdict
 from contextlib import contextmanager
+from dataclasses import dataclass, asdict, fields, replace
 
-from typing import Optional
+from typing import Optional, List, Union
 from importlib_resources import files
 
 # from importlib import resources  # Python 3.9+
@@ -36,7 +38,23 @@ import pandas as pd
 from mako.template import Template
 from mako.lookup import TemplateLookup
 
+from isaac_perf_common.config import VariantsConfig
+
 pd.set_option("display.max_columns", None)
+
+
+def filter_variants(variants_config: VariantsConfig, variants_filter: Union[str, List[int]] = None):
+    assert variants_filter is not None
+    if isinstance(variants_filter, str):
+        variants_filter = list(map(int, variants_filter.split(",")))
+    assert isinstance(variants_filter, list)  # TODO: allow sets?
+    # assert all(isinstance(x, int) for x in variants_filter)
+    filtered_variants = []
+    for variant_config in variants_config.variants:
+        if variant_config.idx in variants_filter or variant_config.name in variants_filter:
+            filtered_variants.append(variant_config)
+    ret = VariantsConfig(filtered_variants)
+    return ret
 
 
 def get_permutations(d):
@@ -119,10 +137,11 @@ def main():
     parser.add_argument("-a", "--etiss-arch", default="XIsaacCore", help="Base ETISS arch name")
     parser.add_argument("--temp-dir", default=None, help="Optional path to persistent temp dir")
     parser.add_argument("--hls-dir", default=None, help="Path to hls output dir")
+    parser.add_argument("--variants-yaml", default=None, help="Path to variants YAML file")
     # parser.add_argument("--hls-schedules", default=None, help="Path to hls_schedules.csv")
     # parser.add_argument("--hls-yaml", default=None, help="Path to ISAX_XIsaac.yaml")
     # parser.add_argument("--selected-solutions", default=None, help="Path to selected_solutions.yaml")
-    parser.add_argument("--variants", default=None, help="Filter variants")
+    parser.add_argument("--variants-filter", default=None, help="Filter variants")
     parser.add_argument("--index-yaml", default=None, help="Path to XISAAC index.yml")
     parser.add_argument("--parts-only", action="store_true", help="Only generate parts")
     parser.add_argument("--render-only", action="store_true", help="Only render final output")
@@ -152,7 +171,7 @@ def main():
     lookup_dirs = defaultdict(list)
     lookup_dirs2 = []
     xlen = None
-    variants = None
+    variant_names = []
     with temp_dir_content() as temp_dir:
         # print("temp_dir", temp_dir)
         temp_dir.mkdir(exist_ok=True)
@@ -172,188 +191,79 @@ def main():
                 assert len(global_properties) > 0
                 global_properties = global_properties[0]
             xlen = global_properties["xlen"]
-            # if args.hls_schedules is None:
-            #     assert args.hls_dir is not None
-            #     hls_schedules = Path(args.hls_dir) / ".." / "hls_schedules.csv"
-            # else:
-            #     hls_schedules = Path(args.hls_schedules)
-            hls_schedules = Path(args.hls_dir) / "hls_schedules.csv"
-            assert hls_schedules.is_file(), f"Missing: {hls_schedules}"
-            hls_schedules_df = pd.read_csv(hls_schedules)
-            drop_fallback_schedules = True
-            if drop_fallback_schedules:
-                hls_schedules_df = hls_schedules_df[~hls_schedules_df["Fallback"]]
-            # print("hls_schedules_df", hls_schedules_df)
-            # input("123")
-            # assert args.selected_solutions is not None
-            variants_filter = args.variants
-            if variants_filter is not None:
-                if isinstance(variants_filter, str):
-                    variants_filter = list(map(int, variants_filter.split(",")))
-                assert isinstance(variants_filter, list)  # TODO: allow sets?
-            variants = {}
-            variant_extras = {}
-            if hls_schedules_df is not None:
-                hls_schedules_df["SG"] = hls_schedules_df["config"].apply(lambda x: int(x.split("_")[1]))
-            hls_selected_schedule_metrics_csv = Path(args.hls_dir) / "hls_selected_schedule_metrics.csv"
-            assert hls_selected_schedule_metrics_csv.is_file(), f"Missing: {hls_selected_schedule_metrics_csv}"
-            hls_variants_df = pd.read_csv(hls_selected_schedule_metrics_csv)
-            num_variants = len(hls_variants_df)
-            # print("hls_variants_df")
-            print(hls_variants_df)
-            # print("num_variants", num_variants)
-            if variants_filter:
-                hls_variants_df = hls_variants_df[hls_variants_df["Variant idx"].isin(variants_filter)]
-            print("hls_variants_df")
-            print(hls_variants_df)
-            for idx, variant_row in hls_variants_df.iterrows():
-                # print("idx", idx)
-                # print("variant_row", variant_row)
-                variant_name = variant_row.get("Variant name")
-                # print("variant_name", variant_name)
-                # if variant_name is None:
-                #     variant_name = f"V{idx}"
-                # print("variant_name", variant_name)
-                variant_details = variant_row.get("Variant details")
-                variant_description = variant_row.get("Variant description")
-                total_area_estimate = variant_row["total_area_estimate"]
-                variant_extras[variant_name] = (
-                    variant_description,
-                    variant_details,
-                    total_area_estimate,
-                )
-                if variant_name is not None:
-                    selected_solutions_yaml = Path(args.hls_dir) / "output" / variant_name / "selected_solutions.yaml"
-                else:
-                    selected_solutions_yaml = Path(args.hls_dir) / "output" / "selected_solutions.yaml"
-                assert selected_solutions_yaml.is_file(), f"Missing: {selected_solutions_yaml}"
-                with open(selected_solutions_yaml) as f:
-                    selected_solutions = yaml.safe_load(f)
-                variant = selected_solutions
-                variants[variant_name] = variant
-            print("variants", variants)
-            # input(">>>")
-            for variant_name, variant in variants.items():
-                # print("variant", variant)
-                selected_solutions = variant
-                # if args.hls_yaml is None:
-                #     assert args.hls_dir is not None
-                #     hls_yaml = Path(args.hls_dir) / "ISAX_XIsaac.yaml"
-                # else:
-                #     hls_yaml = Path(args.hls_yaml)
-                if variant_name is not None:
-                    hls_yaml = Path(args.hls_dir) / "output" / variant_name / "ISAX_XIsaac.yaml"
-                else:
-                    hls_yaml = Path(args.hls_dir) / "output" / "ISAX_XIsaac.yaml"
-                assert hls_yaml.is_file(), f"Missing: {hls_yaml}"
-                with open(hls_yaml) as f:
-                    hls_data = yaml.safe_load(f)
-                    # print("hls_data", hls_data)
-
-                def apply_selection(hls_schedules_df, selected_solutions):
-                    configs = [f"SG_{x['sharing_group']}_SOL_IDX_{x['solution_idx']}" for x in selected_solutions]
-                    # print("configs", configs)
-                    hls_schedules_df_ = hls_schedules_df[hls_schedules_df["config"].isin(configs)]
-                    return hls_schedules_df_
-
-                hls_schedules_df_ = apply_selection(hls_schedules_df, selected_solutions)
-                # print("hls_schedules_df_", hls_schedules_df_)
-                instr_latencies = {}
-                sg2ii = {}
-                sg2instrs = defaultdict(list)
-                for _, row in hls_schedules_df_.iterrows():
-                    lats = row["Instruction latencies"]
-                    ii = row["II"]
-                    # print("ii", ii)
-                    # input("!!!")
-                    grp = row["SG"]
-                    assert grp not in sg2ii
-                    sg2ii[grp] = ii
-                    if lats in ["None", None]:
-                        instr_names = ["unknown"]  # TODO
-                        assert "Overall latency" in row
-                        default_lat = row["Overall latency"]
-                        lats = {}
-                        for instr_name in instr_names:
-                            lats[instr_name] = default_lat
-                    else:
-                        lats = ast.literal_eval(lats)
-                        # print("lats", lats, type(lats))
-                        assert len(lats) == 1, "Multi-instr sharing groups are unsupported!"
-                    for instr_name, lat in lats.items():
-                        sg2instrs[grp].append(instr_name)
-                        lat_ = lat
-                        assert instr_name not in instr_latencies
-                        instr_latencies[instr_name] = lat_
-                instr_latencies2 = {}
-                # print("sg2instrs", sg2instrs)
-                # print("instr_latencies", instr_latencies)
-                for instr_data in hls_data:
-                    if "instruction" not in instr_data:
-                        break
-                    instr_name = instr_data["instruction"]
-                    schedule = instr_data["schedule"]
-                    stage_nums = [x["stage"] for x in schedule]
-                    # print("stage_nums", stage_nums)
-                    min_stage, max_stage = min(stage_nums), max(stage_nums)
-                    # print("instr_latencies", instr_latencies)
-                    # assert instr_latencies[instr_name] == (max_stage + 1)  # TODO: fix
-                    lat = max_stage - min_stage + 1
-                    # print("lat", lat)
-                    lat = max(1, lat)
-                    # print("lat_", lat)
-                    instr_latencies2[instr_name] = lat
-                # print("instr_latencies2", instr_latencies2)
-
+            instr_operands_map = {}
+            for candidate_data in candidates_data:
+                candidate_properties = candidate_data["properties"]
+                instr_name = candidate_properties["InstrName"]
+                operand_names = candidate_properties["OperandNames"]
+                operand_types = candidate_properties["OperandTypes"]
+                operand_dirs = candidate_properties["OperandDirs"]
+                operands_map = {}
+                for i, operand_name in enumerate(operand_names):
+                    operand_type = operand_types[i]
+                    operand_dir = operand_dirs[i]
+                    assert operand_dir != "INOUT", "INOUT regs not supported!"
+                    if operand_type == "REG":
+                        assert operand_name in [
+                            "rd",
+                            "rs1",
+                            "rs2",
+                        ], f"Unsupported operand name: {operand_name}"
+                    operand_field = operand_name
+                    operands_map[operand_name] = (
+                        operand_field,
+                        operand_type,
+                        operand_dir,
+                    )
+                instr_operands_map[instr_name] = operands_map
+                instr_names = list(instr_operands_map.keys())
+                trace_values = set()
+                for instr_name, instr_operands in instr_operands_map.items():
+                    reg_operands = {
+                        operand_name: data for operand_name, data in instr_operands.items() if data[1] == "REG"
+                    }
+                    imm_operands = {
+                        operand_name: data for operand_name, data in instr_operands.items() if data[1] == "IMM"
+                    }
+                    reg_names = list(reg_operands.keys()) + list(imm_operands.keys())
+                    for reg_name in reg_names:
+                        trace_values_ = {reg_name, f"{reg_name}_data"}
+                        trace_values.update(trace_values_)
+                print("trace_values", trace_values)
                 # input("!")
-                instr_operands_map = {}
+            if args.hls_dir:
+                # print("--hls-dir arg is deprecated, Please run isaac-load-hls first and pass --perf-yaml")
+                # variants_config = load_hls_artifacts(args.hls_dir)
+                raise RuntimeError("--hls-dir arg is deprecated, Please run isaac-load-hls first and pass --perf-yaml")
+            else:
+                assert args.variants_yaml is not None
+                variants_config = VariantsConfig.from_yaml_file(args.variants_yaml)
+            print("variants_config", variants_config.to_yaml())
+            if args.variants_filter is not None:
+                variants_config = filter_variants(variants_config, args.variants_filter)
+            for variant_idx, variant_config in enumerate(variants_config.variants):
+                variant_name = variant_config.name
+                assert variant_name not in variant_names
+                variant_names.append(variant_name)
                 instrs_timing = {}
-                # print("sg2ii", sg2ii)
-                for candidate_data in candidates_data:
-                    candidate_properties = candidate_data["properties"]
-                    instr_name = candidate_properties["InstrName"]
-                    # print("instr_name", instr_name)
-                    operand_names = candidate_properties["OperandNames"]
-                    # print("operand_names", operand_names)
-                    operand_types = candidate_properties["OperandTypes"]
-                    # print("operand_types", operand_types)
-                    operand_dirs = candidate_properties["OperandDirs"]
-                    # print("operand_dirs", operand_dirs)
-                    operands_map = {}
-                    for i, operand_name in enumerate(operand_names):
-                        operand_type = operand_types[i]
-                        operand_dir = operand_dirs[i]
-                        assert operand_dir != "INOUT", "INOUT regs not supported!"
-                        if operand_type == "REG":
-                            assert operand_name in [
-                                "rd",
-                                "rs1",
-                                "rs2",
-                            ], f"Unsupported operand name: {operand_name}"
-                        operand_field = operand_name
-                        operands_map[operand_name] = (
-                            operand_field,
-                            operand_type,
-                            operand_dir,
-                        )
-                    instr_operands_map[instr_name] = operands_map
-                    # print("instr_name", instr_name)
-                    # print("instr_latencies2", instr_latencies2)
-                    instr_cycles = instr_latencies2[instr_name]
-                    sgs = [sg for sg, instrs in sg2instrs.items() if instr_name in instrs]
-                    # print("sgs", sgs)
-                    assert len(sgs) == 1
-                    sg = sgs[0]
-                    # print("sg", sg)
-                    ii = sg2ii[sg]
+                # sgs = variant_config.sharing_groups
+                sg2instrs = defaultdict(set)
+                sg2iis = defaultdict(set)
+
+                for instr_config in variant_config.instrs:
+                    instr_name = instr_config.name
+                    instr_cycles = instr_config.cycles
+                    sg = instr_config.sg
+                    sg2instrs[sg].add(instr_name)
+                    ii = instr_config.ii
+                    sg2iis[sg].add(ii)
                     instr_timing = (instr_cycles, ii)
                     instrs_timing[instr_name] = instr_timing
-                instr_names = list(instr_operands_map.keys())
-                # if variant_name is not None:
-                #     dest_dir = temp_dir / variant_name
-                #     dest_dir.mkdir(exist_ok=True)
-                # else:
-                #     dest_dir = temp_dir
+
+                sg2ii = {}
+                for sg, iis in sg2iis.items():
+                    assert len(iis) == 1, f"SG {sg} has multiple IIs: {iis}"
+                    sg2ii[sg] = list(iis)[0]
                 dest_dir = temp_dir
                 lookup_dirs[variant_name].append(dest_dir)
                 lookup_dirs2.append(temp_dir)
@@ -373,20 +283,6 @@ def main():
                         "cva6_xisaac_pipelines.part": "xisaac_pipelines.mako",
                     },
                 }
-                trace_values = set()
-                for instr_name, instr_operands in instr_operands_map.items():
-                    reg_operands = {
-                        operand_name: data for operand_name, data in instr_operands.items() if data[1] == "REG"
-                    }
-                    imm_operands = {
-                        operand_name: data for operand_name, data in instr_operands.items() if data[1] == "IMM"
-                    }
-                    reg_names = list(reg_operands.keys()) + list(imm_operands.keys())
-                    for reg_name in reg_names:
-                        trace_values_ = {reg_name, f"{reg_name}_data"}
-                        trace_values.update(trace_values_)
-                print("trace_values", trace_values)
-                # input("!")
                 cores_parts_map2 = {
                     "cv32e40p": {
                         "cv32e40p_xisaac_microaction_mapping.part": "cv32e40p_xisaac_microaction_mapping_new.mako",
@@ -480,7 +376,9 @@ def main():
                 # print("template", template)
                 assert template is not None
                 mytemplate = Template(filename=template, lookup=mylookup)
-                content = mytemplate.render(variants=variants, new=True, uarch_name=uarch_name, core_name=core_name)
+                content = mytemplate.render(
+                    variants=variant_names, new=True, uarch_name=uarch_name, core_name=core_name
+                )
                 # if variant_name is not None:
                 #     header = f"// Variant: {variant_name}\n"
                 # else:
@@ -517,21 +415,20 @@ def main():
         with open(monitor_dest, "w") as f:
             f.write(monitor_content)
     if args.uarchs_dest:
-        assert variants is not None
+        assert variant_config is not None
         uarchs_data = []
-        for variant_name in variants:
+        for variant_idx, variant_config in enumerate(variants_config.variants):
+            variant_name = variant_config.name
             variant_suffix = variant_name if variant_name is not None else ""
-            extras = variant_extras[variant_name]
-            variant_description, variant_details, total_area_estimate = extras
             uarch = f"{uarch_name}{variant_suffix}"
             uarch_lower = uarch.lower()
             new = {
                 "uarch": uarch,
                 "uarch_lower": uarch_lower,
                 "variant": variant_name,
-                "description": variant_description,
-                "details": variant_details,
-                "total_area_estimate": total_area_estimate,
+                "description": variant_config.description,
+                "details": variant_config.details,
+                **variant_config.metrics,
             }
             uarchs_data.append(new)
 
@@ -541,10 +438,12 @@ def main():
         uarchs_df.to_csv(args.uarchs_dest)
 
     if args.ini_dest:
-        assert variants is not None
+        assert variant_config is not None
+        uarchs_data = []
         assert monitor_name
         trace_modes = [False, True]
-        for variant_name in variants:
+        for variant_idx, variant_config in enumerate(variants_config.variants):
+            variant_name = variant_config.name
             for trace_mode in trace_modes:
                 variant_suffix = variant_name if variant_name is not None else ""
                 uarch = f"CV32E40PXISAAC{variant_suffix}"
