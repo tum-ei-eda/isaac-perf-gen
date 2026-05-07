@@ -346,7 +346,7 @@ def main():
                         sg2instrs=sg2instrs,
                         uarch_name=uarch_name,
                         core_name=core_name,
-                        trace_values=trace_values,
+                        trace_values=sorted(list(trace_values)),
                     )
                     subdir = dest_dir
                     part_dest = subdir / part_file
