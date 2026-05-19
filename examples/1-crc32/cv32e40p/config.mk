@@ -1,0 +1,8 @@
+CORE := cv32e40p
+ARCH_NAME ?= XIsaac
+ETISS_ARCH ?= XIsaacCore
+UARCH_NAME := CV32E40PXISAAC
+MONITOR_NAME := InstructionTrace_XISAAC
+
+INDEX_FILE := $(INPUTS_DIR)/final_index.yml
+HLS_DIR := $(INPUTS_DIR)/hls
