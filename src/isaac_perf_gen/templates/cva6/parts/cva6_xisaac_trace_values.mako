@@ -1,6 +1,6 @@
 <%
 known = ["rs1", "rs2", "rd", "pc", "addr", "brTarget", "imm", "rs1_data", "rs2_data"]
-missing = set(trace_values) - set(known)
+missing = sorted(list(set(trace_values) - set(known)))
 %>\
 TraceValue {
 % for i, name in enumerate(missing):
