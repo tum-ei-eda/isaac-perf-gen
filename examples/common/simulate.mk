@@ -18,7 +18,7 @@ endif
 
 ifeq ($(SIM_ENABLED),yes)
 
-ETISS_SRC_DIR := $(TEMP_DIR)/etiss_source
+ETISS_SRC_DIR := $(TEMP_DIR)/etiss_perf_source
 
 ETISS_EXE := $(ETISS_SRC_DIR)/install/bin/bare_etiss_processor
 
@@ -30,11 +30,12 @@ ETISS_JIT ?= TCC
 $(TEMP_DIR):
 	mkdir -p $@
 
-$(TEMP_DIR)/etiss_source.zip: | $(TEMP_DIR)
+$(TEMP_DIR)/etiss_perf_source.tar.gz: | $(TEMP_DIR)
 	wget $(ETISS_SRC_DL_URL) -O $@
 
-$(ETISS_SRC_DIR)/build: $(TEMP_DIR)/etiss_source.zip
-	unzip -q $< -d $(ETISS_SRC_DIR)
+$(ETISS_SRC_DIR)/build: $(TEMP_DIR)/etiss_perf_source.tar.gz
+	mkdir -p $(ETISS_SRC_DIR)
+	tar xf $< -C $(ETISS_SRC_DIR) || rm -rf $(ETISS_SRC_DIR)
 	cmake \
 		-S $(ETISS_SRC_DIR) \
 		-B $(ETISS_SRC_DIR)/build \
