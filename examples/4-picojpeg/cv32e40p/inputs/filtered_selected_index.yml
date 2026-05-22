@@ -1,0 +1,937 @@
+candidates:
+- artifacts:
+    cdsl: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM0.core_desc
+    cdsl_encoded: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen/CUSTOM0.encoded.core_desc
+    flat: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM0.flat
+    fuse_cdsl: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM0.fuse_core_desc
+    io_sub: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.131_0/io_sub10.pkl
+    sub: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.131_0/sub10.pkl
+    tree: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.131_0/tree10.pkl
+  id: 0
+  metrics:
+    arch: xisaaccustom0single
+    benefit: 0.02321365763913319
+    code_size_reduction_rel: 0.0019401778496361821
+    cost: 1909.330933
+    enc_score: 0.9990234375
+    enc_weight: 0.0009765625
+    hls_area: 1909.330933
+    hls_area_scaled: 1909.330933
+    hls_ii: 1
+    hls_latency: 3
+    hls_num_shared: 1
+    instr: CUSTOM0
+    ratio: 1.2158006366481043e-05
+    runtime_reduction_rel: 0.02321365763913319
+    seal5_score: 1.0
+    util_score: 0.0487773348873745
+  properties:
+    '#Branches': 0.0
+    '#ConstantNodes': 1.0
+    '#InputNodes': 2.0
+    '#Instrs': 2.0
+    '#Isos': 0.0
+    '#IsosNO': 0.0
+    '#Loads': 0.0
+    '#Mems': 0.0
+    '#Nodes': 2.0
+    '#Operands': .nan
+    '#OutputNodes': 1.0
+    '#Stores': 0.0
+    '#Terminators': 0.0
+    '#UniqueInstrs': 2.0
+    BranchNodes: []
+    ConstantMinBits:
+    - 1
+    ConstantNodes:
+    - 2433
+    ConstantSigns:
+    - false
+    ConstantValues:
+    - 1
+    Constraints: []
+    DateTime: 20260522T171108
+    EncodingBitsLeft (32 bits): 10.0
+    EncodingFootprint (32 bits): 0.6
+    EncodingWeight (32 bits): 0.0009765625
+    Freq: 60174.0
+    FullHash: 3984087e52a7d05b80b324496bd3e69ca994a584
+    GlobalHash: d0b6cb455389284262475d130149edcb850632bd
+    IOSubHash: 931e76db45a24175fe9077d1840cbde6
+    InputNames:
+    - inp0
+    - inp1
+    InputNodes:
+    - 1775
+    - 1789
+    InstrName: CUSTOM0
+    Instrs:
+    - SLLI
+    - ADD
+    IsoNodes:
+    - 594
+    - 966
+    IsoWeight: 0.036179077233317286
+    Isos: []
+    IsosNO: []
+    LoadNodes: []
+    Nodes:
+    - 966
+    - 594
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15.0
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandNodes:
+    - 5161
+    - 1775
+    - 1789
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+    OutputNames:
+    - outp0
+    OutputNodes:
+    - 5161
+    Parent: .nan
+    Predicates: 256
+    Predicates (str): '256'
+    Registers: 2
+    ScheduleLength: 3.0
+    Status: 1
+    Status (str): '1'
+    StoreNodes: []
+    SubHash: 4ddafd00eac0b15eb2d99c2af4e9e14b
+    TerminatorNodes: []
+    UniqueInstrs:
+    - ADD
+    - SLLI
+    Variations: 0
+    Weight: 0.036179077233317286
+    result: 10
+- artifacts:
+    cdsl: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM4.core_desc
+    cdsl_encoded: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen/CUSTOM4.encoded.core_desc
+    flat: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM4.flat
+    fuse_cdsl: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM4.fuse_core_desc
+    io_sub: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.151_0/io_sub215.pkl
+    sub: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.151_0/sub215.pkl
+    tree: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.151_0/tree215.pkl
+  id: 4
+  metrics:
+    arch: xisaaccustom4single
+    benefit: 0.012928943120225966
+    code_size_reduction_rel: 0.0025869037995149835
+    cost: 3619.721191
+    enc_score: 0.9990234375
+    enc_weight: 0.0009765625
+    hls_area: 3619.721191
+    hls_area_scaled: 3619.721191
+    hls_ii: 1
+    hls_latency: 3
+    hls_num_shared: 1
+    instr: CUSTOM4
+    ratio: 3.571806345851228e-06
+    runtime_reduction_rel: 0.012928943120225966
+    seal5_score: 1.0
+    util_score: 0.0258587335605873
+  properties:
+    '#Branches': 0.0
+    '#ConstantNodes': 2.0
+    '#InputNodes': 2.0
+    '#Instrs': 3.0
+    '#Isos': 1.0
+    '#IsosNO': 0.0
+    '#Loads': 0.0
+    '#Mems': 0.0
+    '#Nodes': 3.0
+    '#Operands': .nan
+    '#OutputNodes': 1.0
+    '#Stores': 0.0
+    '#Terminators': 0.0
+    '#UniqueInstrs': 3.0
+    BranchNodes: []
+    ConstantMinBits:
+    - 4
+    - 9
+    ConstantNodes:
+    - 3332
+    - 4360
+    ConstantSigns:
+    - false
+    - true
+    ConstantValues:
+    - 8
+    - -179
+    Constraints: []
+    DateTime: 20260522T171144
+    EncodingBitsLeft (32 bits): 10.0
+    EncodingFootprint (32 bits): 0.6
+    EncodingWeight (32 bits): 0.0009765625
+    Freq: 21504.0
+    FullHash: 199762d240a94fbea46b035ff908484572d434c9
+    GlobalHash: 1dae08c32159aee712c4d77832dc0ae51ff1d266
+    IOSubHash: 9413e871c4a554f8e9dab04bb76de2e9
+    InputNames:
+    - inp0
+    - inp1
+    InputNodes:
+    - 745
+    - 1069
+    InstrName: CUSTOM4
+    Instrs:
+    - SRLI
+    - ADD
+    - ADDI
+    IsoNodes:
+    - 484
+    - 248
+    - 335
+    IsoWeight: 0.019393630392493144
+    Isos:
+    - 220
+    IsosNO: []
+    LoadNodes: []
+    Nodes:
+    - 484
+    - 335
+    - 248
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15.0
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandNodes:
+    - 5586
+    - 745
+    - 1069
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+    OutputNames:
+    - outp0
+    OutputNodes:
+    - 5586
+    Parent: .nan
+    Predicates: 256
+    Predicates (str): '256'
+    Registers: 2
+    ScheduleLength: 4.0
+    Status: 1
+    Status (str): '1'
+    StoreNodes: []
+    SubHash: 35ae91a56fcde8443e6a01c565ffe072
+    TerminatorNodes: []
+    UniqueInstrs:
+    - ADDI
+    - SRLI
+    - ADD
+    Variations: 0
+    Weight: 0.019393630392493144
+    result: 215
+- artifacts:
+    cdsl: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM11.core_desc
+    cdsl_encoded: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen/CUSTOM11.encoded.core_desc
+    flat: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM11.flat
+    fuse_cdsl: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM11.fuse_core_desc
+    io_sub: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.151_0/io_sub232.pkl
+    sub: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.151_0/sub232.pkl
+    tree: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.151_0/tree232.pkl
+  id: 7
+  metrics:
+    arch: xisaaccustom11single
+    benefit: 0.0258578862404516
+    code_size_reduction_rel: 0.006467259498787237
+    cost: 26361.541016
+    enc_score: 0.9990234375
+    enc_weight: 0.0009765625
+    hls_area: 26361.541016
+    hls_area_scaled: 26361.541016
+    hls_ii: 1
+    hls_latency: 4
+    hls_num_shared: 1
+    instr: CUSTOM11
+    ratio: 9.808943348477728e-07
+    runtime_reduction_rel: 0.0258578862404516
+    seal5_score: 1.0
+    util_score: 0.0258587335605873
+  properties:
+    '#Branches': 0.0
+    '#ConstantNodes': 1.0
+    '#InputNodes': 2.0
+    '#Instrs': 2.0
+    '#Isos': 0.0
+    '#IsosNO': 0.0
+    '#Loads': 0.0
+    '#Mems': 0.0
+    '#Nodes': 2.0
+    '#Operands': .nan
+    '#OutputNodes': 1.0
+    '#Stores': 0.0
+    '#Terminators': 0.0
+    '#UniqueInstrs': 2.0
+    BranchNodes: []
+    ConstantMinBits:
+    - 4
+    ConstantNodes:
+    - 3332
+    ConstantSigns:
+    - false
+    ConstantValues:
+    - 8
+    Constraints: []
+    DateTime: 20260522T171144
+    EncodingBitsLeft (32 bits): 10.0
+    EncodingFootprint (32 bits): 0.6
+    EncodingWeight (32 bits): 0.0009765625
+    Freq: 21504.0
+    FullHash: c3f94df878f099c75ccbc240991a762369072a75
+    GlobalHash: 1dae08c32159aee712c4d77832dc0ae51ff1d266
+    IOSubHash: b65b3a1e63031dcb25a5f34de38541a8
+    InputNames:
+    - inp0
+    - inp1
+    InputNodes:
+    - 1277
+    - 2216
+    InstrName: CUSTOM11
+    Instrs:
+    - MUL
+    - SRLI
+    IsoNodes:
+    - 745
+    - 484
+    IsoWeight: 0.012929086928328762
+    Isos: []
+    IsosNO: []
+    LoadNodes: []
+    Nodes:
+    - 745
+    - 484
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15.0
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandNodes:
+    - 5611
+    - 1277
+    - 2216
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+    OutputNames:
+    - outp0
+    OutputNodes:
+    - 5611
+    Parent: .nan
+    Predicates: 256
+    Predicates (str): '256'
+    Registers: 2
+    ScheduleLength: 3.0
+    Status: 1
+    Status (str): '1'
+    StoreNodes: []
+    SubHash: d7f83c17346cfb4e370db30983194f35
+    TerminatorNodes: []
+    UniqueInstrs:
+    - MUL
+    - SRLI
+    Variations: 0
+    Weight: 0.012929086928328762
+    result: 232
+- artifacts:
+    cdsl: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM21.core_desc
+    cdsl_encoded: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen/CUSTOM21.encoded.core_desc
+    flat: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM21.flat
+    fuse_cdsl: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM21.fuse_core_desc
+    io_sub: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.337_0/io_sub117.pkl
+    sub: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.337_0/sub117.pkl
+    tree: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.337_0/tree117.pkl
+  id: 21
+  metrics:
+    arch: xisaaccustom21single
+    benefit: 0.012928943120225966
+    code_size_reduction_rel: 0.005820533548908768
+    cost: 28071.929688
+    enc_score: 0.9990234375
+    enc_weight: 0.0009765625
+    hls_area: 28071.929688
+    hls_area_scaled: 28071.929688
+    hls_ii: 1
+    hls_latency: 4
+    hls_num_shared: 1
+    instr: CUSTOM21
+    ratio: 4.60564815597723e-07
+    runtime_reduction_rel: 0.012928943120225966
+    seal5_score: 1.0
+    util_score: 0.0258587335605873
+  properties:
+    '#Branches': 0.0
+    '#ConstantNodes': 1.0
+    '#InputNodes': 2.0
+    '#Instrs': 3.0
+    '#Isos': 1.0
+    '#IsosNO': 0.0
+    '#Loads': 0.0
+    '#Mems': 0.0
+    '#Nodes': 3.0
+    '#Operands': .nan
+    '#OutputNodes': 1.0
+    '#Stores': 0.0
+    '#Terminators': 0.0
+    '#UniqueInstrs': 3.0
+    BranchNodes: []
+    ConstantMinBits:
+    - 4
+    ConstantNodes:
+    - 2403
+    ConstantSigns:
+    - false
+    ConstantValues:
+    - 8
+    Constraints: []
+    DateTime: 20260522T171210
+    EncodingBitsLeft (32 bits): 10.0
+    EncodingFootprint (32 bits): 0.6
+    EncodingWeight (32 bits): 0.0009765625
+    Freq: .nan
+    FullHash: 45cd82a312d30b00f622de1b0ca149973845e3a9
+    GlobalHash: e9c0e6576e457bc5b502cea1a53016ea22b0e243
+    IOSubHash: 3a9f1218eb1a4e5fd70fce5d33392bc1
+    InputNames:
+    - inp0
+    - inp1
+    InputNodes:
+    - 2087
+    - 3923
+    InstrName: CUSTOM21
+    Instrs:
+    - ADD
+    - MUL
+    - SRLI
+    IsoNodes:
+    - 661
+    - 1112
+    - 442
+    IsoWeight: .nan
+    Isos:
+    - 120
+    IsosNO: []
+    LoadNodes: []
+    Nodes:
+    - 442
+    - 1112
+    - 661
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15.0
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandNodes:
+    - 5351
+    - 2087
+    - 3923
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+    OutputNames:
+    - outp0
+    OutputNodes:
+    - 5351
+    Parent: .nan
+    Predicates: 256
+    Predicates (str): '256'
+    Registers: 2
+    ScheduleLength: 4.0
+    Status: 1
+    Status (str): '1'
+    StoreNodes: []
+    SubHash: 1e55f3cfbb1c85a79a8e1f68b54b9ed2
+    TerminatorNodes: []
+    UniqueInstrs:
+    - ADD
+    - MUL
+    - SRLI
+    Variations: 0
+    Weight: .nan
+    result: 117
+- artifacts:
+    cdsl: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM24.core_desc
+    cdsl_encoded: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen/CUSTOM24.encoded.core_desc
+    flat: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM24.flat
+    fuse_cdsl: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM24.fuse_core_desc
+    io_sub: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.337_0/io_sub137.pkl
+    sub: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.337_0/sub137.pkl
+    tree: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.337_0/tree137.pkl
+  id: 24
+  metrics:
+    arch: xisaaccustom24single
+    benefit: 0.006464471560112761
+    code_size_reduction_rel: 0.0012934518997576028
+    cost: 3619.721191
+    enc_score: 0.9990234375
+    enc_weight: 0.0009765625
+    hls_area: 3619.721191
+    hls_area_scaled: 3619.721191
+    hls_ii: 1
+    hls_latency: 3
+    hls_num_shared: 1
+    instr: CUSTOM24
+    ratio: 1.7859031729255529e-06
+    runtime_reduction_rel: 0.006464471560112761
+    seal5_score: 1.0
+    util_score: 0.0129293667802936
+  properties:
+    '#Branches': 0.0
+    '#ConstantNodes': 1.0
+    '#InputNodes': 2.0
+    '#Instrs': 2.0
+    '#Isos': 0.0
+    '#IsosNO': 0.0
+    '#Loads': 0.0
+    '#Mems': 0.0
+    '#Nodes': 2.0
+    '#Operands': .nan
+    '#OutputNodes': 1.0
+    '#Stores': 0.0
+    '#Terminators': 0.0
+    '#UniqueInstrs': 2.0
+    BranchNodes: []
+    ConstantMinBits:
+    - 9
+    ConstantNodes:
+    - 4183
+    ConstantSigns:
+    - true
+    ConstantValues:
+    - -227
+    Constraints: []
+    DateTime: 20260522T171210
+    EncodingBitsLeft (32 bits): 10.0
+    EncodingFootprint (32 bits): 0.6
+    EncodingWeight (32 bits): 0.0009765625
+    Freq: .nan
+    FullHash: 687cf9d11022cefb845352037b037d51de0866ef
+    GlobalHash: e9c0e6576e457bc5b502cea1a53016ea22b0e243
+    IOSubHash: a3ff07211f9e2669fc859a4b5f4601ff
+    InputNames:
+    - inp0
+    - inp1
+    InputNodes:
+    - 442
+    - 2057
+    InstrName: CUSTOM24
+    Instrs:
+    - ADD
+    - ADDI
+    IsoNodes:
+    - 316
+    - 230
+    IsoWeight: .nan
+    Isos: []
+    IsosNO: []
+    LoadNodes: []
+    Nodes:
+    - 316
+    - 230
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 15.0
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    OperandNodes:
+    - 5377
+    - 442
+    - 2057
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+    OutputNames:
+    - outp0
+    OutputNodes:
+    - 5377
+    Parent: .nan
+    Predicates: 256
+    Predicates (str): '256'
+    Registers: 2
+    ScheduleLength: 3.0
+    Status: 1
+    Status (str): '1'
+    StoreNodes: []
+    SubHash: 2cc2541ebcedb97f3fbbf4a7f220e6c8
+    TerminatorNodes: []
+    UniqueInstrs:
+    - ADD
+    - ADDI
+    Variations: 0
+    Weight: .nan
+    result: 137
+- artifacts:
+    cdsl: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM28.core_desc
+    cdsl_encoded: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen/CUSTOM28.encoded.core_desc
+    flat: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM28.flat
+    fuse_cdsl: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/gen_filtered/CUSTOM28.fuse_core_desc
+    io_sub: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.337_0/io_sub166.pkl
+    sub: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.337_0/sub166.pkl
+    tree: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/pjpeg_decode_mcu_%bb.337_0/tree166.pkl
+  id: 28
+  metrics:
+    arch: xisaaccustom28single
+    benefit: 0.022755517076558207
+    code_size_reduction_rel: 0.005173807599029967
+    cost: 3613.461182
+    enc_score: 0.96875
+    enc_weight: 0.03125
+    hls_area: 3613.461182
+    hls_area_scaled: 3613.461182
+    hls_ii: 1
+    hls_latency: 3
+    hls_num_shared: 1
+    instr: CUSTOM28
+    ratio: 6.2974295088354455e-06
+    runtime_reduction_rel: 0.022755517076558207
+    seal5_score: 1.0
+    util_score: 0.0172620033604088
+  properties:
+    '#Branches': 0.0
+    '#ConstantNodes': 0.0
+    '#InputNodes': 2.0
+    '#Instrs': 2.0
+    '#Isos': 0.0
+    '#IsosNO': 0.0
+    '#Loads': 0.0
+    '#Mems': 0.0
+    '#Nodes': 2.0
+    '#Operands': .nan
+    '#OutputNodes': 1.0
+    '#Stores': 0.0
+    '#Terminators': 0.0
+    '#UniqueInstrs': 2.0
+    BranchNodes: []
+    ConstantMinBits: []
+    ConstantNodes: []
+    ConstantSigns:
+    - false
+    ConstantValues: []
+    Constraints: []
+    DateTime: 20260522T171210
+    EncodingBitsLeft (32 bits): 5.0
+    EncodingFootprint (32 bits): 0.8
+    EncodingWeight (32 bits): 0.03125
+    Freq: .nan
+    FullHash: 4034c615635211c2b86f4fe152d7ba37b3372377
+    GlobalHash: e9c0e6576e457bc5b502cea1a53016ea22b0e243
+    IOSubHash: d855811b4954d82567569fb0e4c68603
+    InputNames:
+    - inp0
+    - inp1
+    InputNodes:
+    - 1112
+    - 3923
+    InstrName: CUSTOM28
+    Instrs:
+    - ADD
+    - SRLI
+    IsoNodes:
+    - 442
+    - 661
+    IsoWeight: .nan
+    Isos: []
+    IsosNO: []
+    LoadNodes: []
+    Nodes:
+    - 442
+    - 661
+    OperandDirs:
+    - OUT
+    - IN
+    - IN
+    - IN
+    OperandEncBits:
+    - 5
+    - 5
+    - 5
+    - 5
+    OperandEncBitsSum: 20.0
+    OperandNames:
+    - rd
+    - rs1
+    - rs2
+    - uimm5
+    OperandNodes:
+    - 5374
+    - 1112
+    - 3923
+    - 5406
+    OperandRegClasses:
+    - GPR
+    - GPR
+    - GPR
+    - null
+    OperandTypes:
+    - REG
+    - REG
+    - REG
+    - IMM
+    OutputNames:
+    - outp0
+    OutputNodes:
+    - 5374
+    Parent: 134.0
+    Predicates: 256
+    Predicates (str): '256'
+    Registers: 2
+    ScheduleLength: 3.0
+    Status: 1
+    Status (str): '1'
+    StoreNodes: []
+    SubHash: 66bcae466d3253e66d39932d76a7da9e
+    TerminatorNodes: []
+    UniqueInstrs:
+    - ADD
+    - SRLI
+    Variations: 16
+    Weight: .nan
+    result: 166
+global:
+  artifacts:
+    ETISS_INSTALL_DIR: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/local//etiss//etiss_install
+    ETISS_PERF_INSTALL_DIR: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/local//etiss_perf_filtered_selected//etiss_perf_install
+    HLS_DIR: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/docker/hls_filtered_selected/default
+    LLVM_INSTALL_DIR: /var/tmp/ga87puy/isaac-demo/out/embench_iot/picojpeg/20260522T170540/work/local//seal5//llvm_install
+  properties:
+  - allowed_enc_sizes:
+    - 32
+    bb: '%bb.131'
+    candidate_count: 3
+    func: pjpeg_decode_mcu
+    ignore_names:
+    - G_PHI
+    - PHI
+    - COPY
+    - PseudoCALLIndirect
+    - PseudoLGA
+    - Select_GPR_Using_CC_GPR
+    - LUI
+    - PseudoMovAddr
+    - IMPLICIT_DEF
+    ignore_op_types:
+    - input
+    - constant
+    - label
+    instr_predicates: 511
+    limit_results: null
+    max_branches: 1
+    max_enc_footprint: 1.0
+    max_enc_weight: 1.0
+    max_inputs: 4
+    max_loads: 1
+    max_mems: 0
+    max_nodes: 1000
+    max_outputs: 2
+    max_path_len: 9
+    max_path_width: 2
+    max_stores: 1
+    min_enc_bits_left: 5
+    min_inputs: 1
+    min_iso_weight: 0.00814029237749639
+    min_nodes: 1
+    min_outputs: 1
+    min_path_len: 1
+    session: isaac-demo-picojpeg-20260522T170540
+    stage: 32
+    timestamp: 20260522T171108
+    xlen: 32
+  - allowed_enc_sizes:
+    - 32
+    bb: '%bb.149'
+    candidate_count: 0
+    func: pjpeg_decode_mcu
+    ignore_names:
+    - G_PHI
+    - PHI
+    - COPY
+    - PseudoCALLIndirect
+    - PseudoLGA
+    - Select_GPR_Using_CC_GPR
+    - LUI
+    - PseudoMovAddr
+    - IMPLICIT_DEF
+    ignore_op_types:
+    - input
+    - constant
+    - label
+    instr_predicates: 511
+    limit_results: null
+    max_branches: 1
+    max_enc_footprint: 1.0
+    max_enc_weight: 1.0
+    max_inputs: 4
+    max_loads: 1
+    max_mems: 0
+    max_nodes: 1000
+    max_outputs: 2
+    max_path_len: 9
+    max_path_width: 2
+    max_stores: 1
+    min_enc_bits_left: 5
+    min_inputs: 1
+    min_iso_weight: 0.0013252871998225167
+    min_nodes: 1
+    min_outputs: 1
+    min_path_len: 1
+    session: isaac-demo-picojpeg-20260522T170540
+    stage: 32
+    timestamp: 20260522T171127
+    xlen: 32
+  - allowed_enc_sizes:
+    - 32
+    bb: '%bb.151'
+    candidate_count: 17
+    func: pjpeg_decode_mcu
+    ignore_names:
+    - G_PHI
+    - PHI
+    - COPY
+    - PseudoCALLIndirect
+    - PseudoLGA
+    - Select_GPR_Using_CC_GPR
+    - LUI
+    - PseudoMovAddr
+    - IMPLICIT_DEF
+    ignore_op_types:
+    - input
+    - constant
+    - label
+    instr_predicates: 511
+    limit_results: null
+    max_branches: 1
+    max_enc_footprint: 1.0
+    max_enc_weight: 1.0
+    max_inputs: 4
+    max_loads: 1
+    max_mems: 0
+    max_nodes: 1000
+    max_outputs: 2
+    max_path_len: 9
+    max_path_width: 2
+    max_stores: 1
+    min_enc_bits_left: 5
+    min_inputs: 1
+    min_iso_weight: 0.00021576450581417536
+    min_nodes: 1
+    min_outputs: 1
+    min_path_len: 1
+    session: isaac-demo-picojpeg-20260522T170540
+    stage: 32
+    timestamp: 20260522T171144
+    xlen: 32
+  - allowed_enc_sizes:
+    - 32
+    bb: '%bb.337'
+    candidate_count: 16
+    func: pjpeg_decode_mcu
+    ignore_names:
+    - G_PHI
+    - PHI
+    - COPY
+    - PseudoCALLIndirect
+    - PseudoLGA
+    - Select_GPR_Using_CC_GPR
+    - LUI
+    - PseudoMovAddr
+    - IMPLICIT_DEF
+    ignore_op_types:
+    - input
+    - constant
+    - label
+    instr_predicates: 511
+    limit_results: null
+    max_branches: 1
+    max_enc_footprint: 1.0
+    max_enc_weight: 1.0
+    max_inputs: 4
+    max_loads: 1
+    max_mems: 0
+    max_nodes: 1000
+    max_outputs: 2
+    max_path_len: 9
+    max_path_width: 2
+    max_stores: 1
+    min_enc_bits_left: 5
+    min_inputs: 1
+    min_iso_weight: 3.512772324026815e-05
+    min_nodes: 1
+    min_outputs: 1
+    min_path_len: 1
+    session: isaac-demo-picojpeg-20260522T170540
+    stage: 32
+    timestamp: 20260522T171210
+    xlen: 32

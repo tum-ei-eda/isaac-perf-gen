@@ -1,0 +1,95 @@
+- instruction: CUSTOM0
+  mask: "0000000----------000-----1111011"
+  tags: [ "RdStallFlush-Is-Per-ISAX", "ReadResults-Are-Per-ISAX" ]
+  schedule:
+    - interface: RdRS1
+      stage: 2
+    - interface: RdRS2
+      stage: 2
+    - interface: RdIValid
+      stage: 2
+    - interface: RdStall
+      stage: 2
+    - interface: WrRD
+      stage: 2
+- instruction: CUSTOM4
+  mask: "0000010----------000-----1111011"
+  tags: [ "RdStallFlush-Is-Per-ISAX", "ReadResults-Are-Per-ISAX" ]
+  schedule:
+    - interface: RdRS1
+      stage: 2
+    - interface: RdRS2
+      stage: 2
+    - interface: RdIValid
+      stage: 2
+    - interface: RdStall
+      stage: 2
+    - interface: WrRD
+      stage: 2
+- instruction: CUSTOM11
+  mask: "0000101----------000-----1111011"
+  tags: [ "RdStallFlush-Is-Per-ISAX", "ReadResults-Are-Per-ISAX" ]
+  schedule:
+    - interface: RdRS1
+      stage: 2
+    - interface: RdRS2
+      stage: 2
+    - interface: RdIValid
+      stage: 2
+    - interface: RdIValid
+      stage: 3
+    - interface: RdStall
+      stage: 2
+    - interface: RdStall
+      stage: 3
+    - interface: WrRD
+      stage: 3
+- instruction: CUSTOM21
+  mask: "0001011----------000-----1111011"
+  tags: [ "RdStallFlush-Is-Per-ISAX", "ReadResults-Are-Per-ISAX" ]
+  schedule:
+    - interface: RdRS1
+      stage: 2
+    - interface: RdRS2
+      stage: 2
+    - interface: RdIValid
+      stage: 2
+    - interface: RdIValid
+      stage: 3
+    - interface: RdStall
+      stage: 2
+    - interface: RdStall
+      stage: 3
+    - interface: WrRD
+      stage: 3
+- instruction: CUSTOM24
+  mask: "0001110----------000-----1111011"
+  tags: [ "RdStallFlush-Is-Per-ISAX", "ReadResults-Are-Per-ISAX" ]
+  schedule:
+    - interface: RdRS1
+      stage: 2
+    - interface: RdRS2
+      stage: 2
+    - interface: RdIValid
+      stage: 2
+    - interface: RdStall
+      stage: 2
+    - interface: WrRD
+      stage: 2
+- instruction: CUSTOM28
+  mask: "01---------------100-----1111011"
+  tags: [ "RdStallFlush-Is-Per-ISAX", "ReadResults-Are-Per-ISAX" ]
+  schedule:
+    - interface: RdInstr
+      stage: 2
+    - interface: RdRS1
+      stage: 2
+    - interface: RdRS2
+      stage: 2
+    - interface: RdIValid
+      stage: 2
+    - interface: RdStall
+      stage: 2
+    - interface: WrRD
+      stage: 2
+- last stage: 4
