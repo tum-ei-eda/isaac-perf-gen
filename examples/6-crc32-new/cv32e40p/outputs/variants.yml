@@ -1,0 +1,24 @@
+variants:
+- description: null
+  details: null
+  idx: 0
+  instrs:
+  - cycles: 1
+    ii: 1
+    name: CUSTOM6
+    sg: 2
+  - cycles: 1
+    ii: 1
+    name: CUSTOM8
+    sg: 4
+  - cycles: 1
+    ii: 1
+    name: CUSTOM3
+    sg: 1
+  - cycles: 1
+    ii: 1
+    name: CUSTOM7
+    sg: 3
+  metrics:
+    total_area_estimate: 5320.102906
+  name: null

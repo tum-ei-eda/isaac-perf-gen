@@ -1,0 +1,57 @@
+- instruction: CUSTOM3
+  mask: "0000011----------000-----1111011"
+  tags: [ "RdStallFlush-Is-Per-ISAX", "ReadResults-Are-Per-ISAX" ]
+  schedule:
+    - interface: RdRS1
+      stage: 2
+    - interface: RdRS2
+      stage: 2
+    - interface: RdIValid
+      stage: 2
+    - interface: RdStall
+      stage: 2
+    - interface: WrRD
+      stage: 2
+- instruction: CUSTOM6
+  mask: "0000110----------000-----1111011"
+  tags: [ "RdStallFlush-Is-Per-ISAX", "ReadResults-Are-Per-ISAX" ]
+  schedule:
+    - interface: RdRS1
+      stage: 2
+    - interface: RdRS2
+      stage: 2
+    - interface: RdIValid
+      stage: 2
+    - interface: RdStall
+      stage: 2
+    - interface: WrRD
+      stage: 2
+- instruction: CUSTOM7
+  mask: "0000111----------000-----1111011"
+  tags: [ "RdStallFlush-Is-Per-ISAX", "ReadResults-Are-Per-ISAX" ]
+  schedule:
+    - interface: RdRS1
+      stage: 2
+    - interface: RdRS2
+      stage: 2
+    - interface: RdIValid
+      stage: 2
+    - interface: RdStall
+      stage: 2
+    - interface: WrRD
+      stage: 2
+- instruction: CUSTOM8
+  mask: "0001000----------000-----1111011"
+  tags: [ "RdStallFlush-Is-Per-ISAX", "ReadResults-Are-Per-ISAX" ]
+  schedule:
+    - interface: RdRS1
+      stage: 2
+    - interface: RdRS2
+      stage: 2
+    - interface: RdIValid
+      stage: 2
+    - interface: RdStall
+      stage: 2
+    - interface: WrRD
+      stage: 2
+- last stage: 4
