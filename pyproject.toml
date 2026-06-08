@@ -27,6 +27,7 @@ isaac-fake-hls = "isaac_fake_hls.cli:main"
 isaac-fake-hls2 = "isaac_fake_hls.cli:main2"
 isaac-load-cdsl = "isaac_load_cdsl.cli:main"
 isaac-load-hls = "isaac_load_hls.cli:main"
+isaac-load-hls-multi = "isaac_load_hls.cli:main_multi"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

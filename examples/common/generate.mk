@@ -2,38 +2,39 @@ COMMON_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 include $(COMMON_DIR)/common.mk
 
-TEMP_OUT := $(OUTPUTS_DIR)/temp
-INI_OUT := $(OUTPUTS_DIR)/ini
+TEMP_OUT ?= $(OUTPUTS_DIR)/temp
+INI_OUT ?= $(OUTPUTS_DIR)/ini
 
-CDSL_PERF_OUT := $(OUTPUTS_DIR)/$(UARCH_NAME).corePerfDsl
-UARCHS_OUT := $(OUTPUTS_DIR)/uarchs.csv
-MONITOR_OUT := $(OUTPUTS_DIR)/$(MONITOR_NAME).json
+CDSL_PERF_OUT ?= $(OUTPUTS_DIR)/$(UARCH_NAME).corePerfDsl
+UARCHS_OUT ?= $(OUTPUTS_DIR)/uarchs.csv
+MONITOR_OUT ?= $(OUTPUTS_DIR)/$(MONITOR_NAME).json
 
 VARIANTS_YAML_OUT ?= $(OUTPUTS_DIR)/variants.yml
 INDEX_FILE ?= $(INPUTS_DIR)/final_index.yml
+ISAX_NAME ?= XIsaac
 
 EXTRA_ARGS ?=
 
 HLS_DIR ?= $(INPUTS_DIR)/hls
+HLS_DIRS ?= $(HLS_DIR)
 CDSL_IN ?=
 RV_BASE ?=
 
+EXISTING_HLS_DIRS := $(wildcard $(HLS_DIRS))
+NUM_HLS_DIRS := $(words $(EXISTING_HLS_DIRS))
+# HAS_HLS := $(wildcard $(HLS_DIR))
+
 HAS_VARIANTS := $(wildcard $(VARIANTS_YAML_OUT))
-HAS_HLS := $(wildcard $(HLS_DIR))
 HAS_CDSL := $(wildcard $(CDSL_IN))
+HAS_INDEX := $(wildcard $(INDEX_FILE))
 
-ifeq ($(HAS_VARIANTS),)
+ifeq ($(HAS_INDEX),)
 
-# No variants.yml exists
-
-ifeq ($(HAS_HLS),)
-
-# No HLS dir exists
+# No index.yml exists
 
 ifeq ($(HAS_CDSL),)
-$(error No variants.yml, HLS dir, or CoreDSL input found)
+$(error No variants.yml, index YAML, or CoreDSL input found)
 endif
-# CoreDSL -> fake HLS
 
 $(INDEX_FILE): $(CDSL_IN)
 	@echo "Generating index from CoreDSL..."
@@ -45,6 +46,20 @@ $(INDEX_FILE): $(CDSL_IN)
 		-I $(RV_BASE) \
 		--xlen $(XLEN) \
 		--set $(SET_NAME)
+endif
+
+ifeq ($(HAS_VARIANTS),)
+
+# No variants.yml exists
+
+
+# ifeq ($(HAS_HLS),)
+ifeq ($(NUM_HLS_DIRS),0)
+
+# No HLS dir exists
+
+# CoreDSL -> fake HLS
+
 
 $(VARIANTS_YAML_OUT): $(INDEX_FILE)
 	@echo "Generating fake HLS variants..."
@@ -57,21 +72,33 @@ $(VARIANTS_YAML_OUT): $(INDEX_FILE)
 		--lats "$(FAKE_HLS_LATS)" \
 		--strategies "$(FAKE_HLS_STRATEGIES)"
 
-else
-# HLS dir -> variants
+else ifeq ($(NUM_HLS_DIRS),1)
+# single HLS dir -> variants
 
 $(VARIANTS_YAML_OUT):
 	@echo "Loading HLS variants..."
 	@$(mkdir_p)
 
 	isaac-load-hls \
-		$(HLS_DIR) \
-		-o $@
+		$(HLS_DIRS) \
+		-o $@ \
+    --isax-name $(ISAX_NAME)
+
+else
+
+$(VARIANTS_YAML_OUT):
+	@echo "Loading HLS variants (multi)..."
+	@$(mkdir_p)
+
+	isaac-load-hls-multi \
+		$(HLS_DIRS) \
+		-o $@ \
+    --isax-name $(ISAX_NAME)
 
 endif
 endif
 
-$(CDSL_PERF_OUT): $(VARIANTS_YAML_OUT)
+$(CDSL_PERF_OUT): $(VARIANTS_YAML_OUT) $(INDEX_FILE)
 	@echo "Generating performance model..."
 	@$(mkdir_p)
 

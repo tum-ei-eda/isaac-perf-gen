@@ -19,5 +19,6 @@
 """ISAAC HLS Loader CLI."""
 
 from .hls_loader import main
+from .hls_loader_multi import main as main_multi
 
 __all__ = ["main"]
